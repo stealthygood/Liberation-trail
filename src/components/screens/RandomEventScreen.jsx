@@ -3,6 +3,7 @@ import { useGame } from '../../context/GameContext';
 import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
 import Typewriter from '../Typewriter';
+import CelebrationOverlay from '../CelebrationOverlay';
 
 const RANDOM_EVENTS = [
     {
@@ -41,6 +42,7 @@ const RandomEventScreen = () => {
     const { dispatch } = useGame();
     const [event] = useState(() => RANDOM_EVENTS[Math.floor(Math.random() * RANDOM_EVENTS.length)]);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [statsGained, setStatsGained] = useState(null);
 
     const handleSelect = useCallback((option) => {
         if (isProcessing) return;
@@ -54,6 +56,13 @@ const RandomEventScreen = () => {
             setTimeout(() => {
                 dispatch({ type: 'NAVIGATE', payload: SCREENS.DEATH });
             }, 500);
+            return;
+        }
+
+        // Trigger celebration for profitable choices
+        const isProfitable = (option.effects?.oil > 0 || option.effects?.treasury > 0) && !option.isEthical;
+        if (isProfitable) {
+            setStatsGained(option.effects);
             return;
         }
 
@@ -94,6 +103,18 @@ const RandomEventScreen = () => {
                     ))}
                 </div>
             </div>
+
+            {statsGained && (
+                <CelebrationOverlay
+                    statsGained={statsGained}
+                    onComplete={() => {
+                        setStatsGained(null);
+                        playSound('success');
+                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+                        setIsProcessing(false);
+                    }}
+                />
+            )}
 
             <div className="mt-8 text-xs opacity-50 uppercase tracking-widest">
                 Urgent Transmission Required

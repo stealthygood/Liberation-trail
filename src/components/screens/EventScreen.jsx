@@ -4,6 +4,7 @@ import ChoiceMenu from '../ChoiceMenu';
 import Typewriter from '../Typewriter';
 import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
+import CelebrationOverlay from '../CelebrationOverlay';
 
 const EVENTS = [
     {
@@ -179,6 +180,7 @@ const EventScreen = () => {
     // Use functional initializer to pick event once on mount safely
     const [event] = useState(() => EVENTS[Math.floor(Math.random() * EVENTS.length)]);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [statsGained, setStatsGained] = useState(null);
 
     const handleSelect = useCallback((optionId) => {
         if (isProcessing) return;
@@ -232,6 +234,16 @@ const EventScreen = () => {
 
         // Check for victory condition (oil >= 100)
         const newOil = state.stats.oil + (selectedOption.effects?.oil || 0);
+
+        // Trigger celebration for profitable choices
+        const isProfitable = (selectedOption.effects?.oil > 0 || selectedOption.effects?.treasury > 0) && !selectedOption.isEthical;
+
+        if (isProfitable) {
+            setStatsGained(selectedOption.effects);
+            // We'll navigate after celebration completes
+            return;
+        }
+
         if (newOil >= 100) {
             playSound('success');
             setTimeout(() => {
@@ -274,6 +286,37 @@ const EventScreen = () => {
                     disabled={isProcessing || !typingFinished}
                 />
             </div>
+
+            {statsGained && (
+                <CelebrationOverlay
+                    statsGained={statsGained}
+                    onComplete={() => {
+                        setStatsGained(null);
+                        const newOil = state.stats.oil + (statsGained.oil || 0);
+                        if (newOil >= 100) {
+                            dispatch({ type: 'NAVIGATE', payload: SCREENS.VICTORY });
+                        } else {
+                            // Determine next screen (logic copied from handleSelect)
+                            const randomRoll = Math.random() * 100;
+                            const newChaos = state.stats.chaos + (statsGained.chaos || 0);
+                            const selectedOption = event.options.find(opt => opt.effects === statsGained);
+
+                            let targetScreen = SCREENS.EVENT;
+                            if (selectedOption?.miniGame) {
+                                targetScreen = selectedOption.miniGame;
+                            } else if (randomRoll < (10 + newChaos * 0.5)) {
+                                targetScreen = SCREENS.RANDOM_EVENT;
+                            } else if (randomRoll < 40) {
+                                const games = [SCREENS.REDACTION, SCREENS.PRESS_BRIEFING, SCREENS.DRONE_STRIKE, SCREENS.SUPER_PAC, SCREENS.SANCTIONS];
+                                targetScreen = games[Math.floor(Math.random() * games.length)];
+                            }
+
+                            dispatch({ type: 'NAVIGATE', payload: targetScreen });
+                        }
+                        setIsProcessing(false);
+                    }}
+                />
+            )}
         </div>
     );
 };
