@@ -1,0 +1,169 @@
+import { useState, useEffect, useCallback } from 'react';
+import { useGame } from '../../context/GameContext';
+import { SCREENS } from '../../utils/constants';
+import { playSound } from '../../utils/SoundManager';
+import Typewriter from '../Typewriter';
+
+const QUESTIONS = [
+    {
+        id: 1,
+        question: "Reporter: 'What do you call the 47 dead civilians?'",
+        options: [
+            { text: "Collateral damage", effects: { approval: 2, warCrimes: 1 } },
+            { text: "Enemy combatants", effects: { approval: 5, warCrimes: 2 } },
+            { text: "Crisis actors", effects: { approval: -10 } }, // 50/50 chance for +20 later? Let's keep it simple
+            { text: "Tell the truth", effects: { choleraRisk: 25 }, isEthical: true }
+        ]
+    },
+    {
+        id: 2,
+        question: "Reporter: 'Why did we secure the oil fields before the hospitals?'",
+        options: [
+            { text: "Energy security is national security", effects: { approval: 5, oil: 5 } },
+            { text: "Logistical challenges", effects: { approval: 0 } },
+            { text: "The hospitals were empty", effects: { approval: 3, warCrimes: 1 } },
+            { text: "Hospitals don't power tanks", effects: { choleraRisk: 30 }, isEthical: true }
+        ]
+    },
+    {
+        id: 3,
+        question: "Reporter: 'Is it true we're using chemical weapons?'",
+        options: [
+            { text: "That is enemy propaganda", effects: { approval: 10, warCrimes: 1 } },
+            { text: "It was a pest control operation", effects: { approval: 5, warCrimes: 1 } },
+            { text: "We call it 'Freedom Mist'", effects: { approval: 15, warCrimes: 2 } },
+            { text: "Yes, and they work great", effects: { choleraRisk: 40 }, isEthical: true }
+        ]
+    }
+];
+
+const PressBriefingGame = () => {
+    const { dispatch } = useGame();
+    const [qIndex, setQIndex] = useState(0);
+    const [timer, setTimer] = useState(5); // 5 seconds to answer
+    const [gameOver, setGameOver] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const currentQ = QUESTIONS[qIndex];
+
+    const handleSelect = useCallback((option) => {
+        if (isProcessing || gameOver) return;
+        setIsProcessing(true);
+        playSound('type');
+
+        // Apply effects
+        dispatch({ type: 'MODIFY_STATS', payload: option.effects });
+
+        // Check for cholera death from truth-telling
+        if (option.isEthical && Math.random() < 0.5) {
+            setGameOver(true);
+            playSound('error');
+            setTimeout(() => {
+                dispatch({ type: 'NAVIGATE', payload: SCREENS.DEATH });
+            }, 1000);
+            return;
+        }
+
+        // Move to next question or end
+        setTimeout(() => {
+            if (qIndex < QUESTIONS.length - 1) {
+                setQIndex(qIndex + 1);
+                setTimer(5);
+                setIsProcessing(false);
+            } else {
+                setGameOver(true);
+                playSound('success');
+                dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+            }
+        }, 800);
+    }, [qIndex, isProcessing, gameOver, dispatch]);
+
+    // Timer logic and auto-selection
+    useEffect(() => {
+        if (gameOver || isProcessing) return;
+
+        if (timer <= 0) {
+            const timeout = setTimeout(() => {
+                handleSelect({ text: "PANIC", effects: { approval: -10, choleraRisk: 5 } });
+            }, 0);
+            return () => clearTimeout(timeout);
+        }
+
+        const interval = setInterval(() => {
+            setTimer(t => Math.max(0, t - 0.1));
+        }, 100);
+
+        return () => clearInterval(interval);
+    }, [timer, gameOver, isProcessing, handleSelect]);
+
+    // Keyboard support
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (gameOver || isProcessing) return;
+            const num = parseInt(e.key);
+            if (!isNaN(num) && num >= 1 && num <= currentQ.options.length) {
+                handleSelect(currentQ.options[num - 1]);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [gameOver, isProcessing, currentQ.options, handleSelect]);
+
+    const timerBar = '[' + '█'.repeat(Math.ceil(timer * 4)) + '░'.repeat(20 - Math.ceil(timer * 4)) + ']';
+
+    return (
+        <div className="h-full flex-col p-8 items-center justify-center">
+            <div className="w-full max-w-3xl border-2 border-[var(--color-phosphor)] p-6 bg-black/80 relative">
+                <div className="absolute -top-4 left-4 bg-black px-2 text-xl font-bold">
+                    *** WHITE HOUSE PRESS BRIEFING ***
+                </div>
+
+                <div className="mb-8 mt-4 text-center">
+                    <div className="text-2xl min-h-[60px]">
+                        <Typewriter text={currentQ.question} speed={20} />
+                    </div>
+                </div>
+
+                <div className="flex justify-between items-center mb-6 text-sm font-mono">
+                    <span>QUICK! CHOOSE YOUR SPIN:</span>
+                    <span className={timer < 2 ? 'text-red-500 animate-pulse' : ''}>
+                        {timer.toFixed(1)}s {timerBar}
+                    </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                    {currentQ.options.map((option, i) => (
+                        <button
+                            key={i}
+                            disabled={isProcessing}
+                            onClick={() => handleSelect(option)}
+                            className="text-left border-2 border-[var(--color-phosphor-dim)] p-4 hover:border-[var(--color-phosphor)] hover:bg-[rgba(51,255,51,0.1)] transition-all group"
+                        >
+                            <span className="group-hover:animate-pulse mr-2">&gt;</span>
+                            {option.text}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="mt-6 text-center text-xs opacity-50 font-mono">
+                    [WARNING: SILENCE EQUALS GUILT]
+                </div>
+            </div>
+
+            <pre className="mt-8 text-[0.6rem] leading-none opacity-30 select-none pointer-events-none">
+                {`       .-------.
+      /   _   \\
+     |  ( )  |
+      \\  ^  /
+       '---'
+    /\\     /\\
+   /  \\   /  \\
+  /    \\ /    \\
+ /      ^      \\
+/_______________\\`}
+            </pre>
+        </div>
+    );
+};
+
+export default PressBriefingGame;
