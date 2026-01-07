@@ -117,6 +117,14 @@ const StatusBar = () => {
                 </div>
             </div>
             <style>{`
+                @media (max-width: 600px) {
+                    .status-bar-content { padding: 4px 8px; }
+                    .status-row { gap: 4px; }
+                    .status-label { min-width: 60px; font-size: 0.65rem; }
+                    .status-value { font-size: 0.65rem; min-width: 30px; }
+                    .status-bar-visual { font-size: 0.6rem; letter-spacing: 0; }
+                    .status-divider { display: none; }
+                }
                 .country-card {
                     display: flex;
                     justify-content: center;
@@ -128,6 +136,10 @@ const StatusBar = () => {
                     font-size: 0.75rem;
                     text-transform: uppercase;
                     margin-bottom: 4px;
+                }
+                @media (max-width: 600px) {
+                    .country-card { font-size: 0.65rem; gap: 8px; }
+                    .country-divider { display: none; }
                 }
                 .country-label { opacity: 0.7; }
                 .dangerPulse {

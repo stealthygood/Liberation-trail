@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useGame } from '../../context/GameContext';
 import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
@@ -6,11 +6,15 @@ import { playSound } from '../../utils/SoundManager';
 const DisclaimerScreen = () => {
     const { dispatch } = useGame();
 
+    const proceed = useCallback(() => {
+        playSound('type');
+        dispatch({ type: 'NAVIGATE', payload: SCREENS.TITLE });
+    }, [dispatch]);
+
     useEffect(() => {
         const handleKeyPress = (e) => {
             if (e.key === 'Enter') {
-                playSound('type');
-                dispatch({ type: 'NAVIGATE', payload: SCREENS.TITLE });
+                proceed();
             }
         };
 
@@ -22,11 +26,11 @@ const DisclaimerScreen = () => {
             clearTimeout(timeout);
             window.removeEventListener('keydown', handleKeyPress);
         }
-    }, [dispatch]);
+    }, [proceed]);
 
     return (
-        <div className="h-full flex items-center justify-center p-4">
-            <pre className="text-[var(--color-phosphor)] text-sm leading-relaxed whitespace-pre font-mono">
+        <div className="h-full flex flex-col items-center justify-center p-4">
+            <pre className="text-[var(--color-phosphor)] text-sm leading-relaxed whitespace-pre font-mono mb-8">
                 {`╔══════════════════════════════════════════════════════════╗
 ║                   LIBERATION TRAIL                        ║
 ║            "Spreading Democracy™ Since 1953"              ║
@@ -44,13 +48,21 @@ const DisclaimerScreen = () => {
 ║  Let's just say cholera is endemic in Washington.       ║
 ║                                                          ║
 ║  CONTROLS:                                               ║
-║  • Arrow keys or 1-2-3 to select options                ║
-║  • SPACE to skip text                                    ║
-║  • ESC to flee to a non-extradition country             ║
-║                                                          ║
-║            [PRESS ENTER TO BEGIN LIBERATION]             ║
+║  • Tap options or use Arrow keys/Numbers                 ║
+║  • Tap buttons OR use SPACE/ENTER                        ║
+║  • Avoid ethical decisions at all costs                 ║
 ╚══════════════════════════════════════════════════════════╝`}
             </pre>
+
+            <button
+                onClick={proceed}
+                className="text-2xl px-12 py-4 animate-pulse"
+            >
+                [ BEGIN LIBERATION ]
+            </button>
+            <div className="mt-4 text-xs opacity-50">
+                OR PRESS ENTER
+            </div>
         </div>
     );
 };
