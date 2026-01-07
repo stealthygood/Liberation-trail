@@ -133,7 +133,7 @@ const RedactionGame = () => {
         <div className="h-full flex-col p-8 items-center justify-center">
             <div className="text-center mb-6">
                 <h2 className="text-3xl mb-2 text-red-500 animate-pulse">*** REDACTION RUSH ***</h2>
-                <p className="text-sm opacity-80 mb-4">CLICK THE WAR CRIMES BEFORE THE PRESS SEES THEM!</p>
+                <p className="text-sm opacity-80 mb-4">TAP THE WAR CRIMES BEFORE THE PRESS SEES THEM!</p>
 
                 <div className="flex justify-between w-full max-w-2xl text-xs font-mono mb-2">
                     <span>TIME: {timer.toFixed(1)}s {timerBar}</span>

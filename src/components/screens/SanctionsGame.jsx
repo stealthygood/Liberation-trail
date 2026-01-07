@@ -177,7 +177,7 @@ const SanctionsGame = () => {
                         {ship.type === 'MEDICAL' ? '✚ MEDS' : '🚢 OIL/GRAIN'}
                     </div>
                     <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-red-600 text-[10px] px-1 hidden group-hover:block whitespace-nowrap">
-                        CLICK TO BLOCK
+                        TAP TO BLOCK
                     </div>
                 </div>
             ))}

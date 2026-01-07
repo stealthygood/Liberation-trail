@@ -93,8 +93,19 @@ const VictoryScreen = () => {
                 "Our liberation of {selectedCountry?.name || 'THE TARGET'} is a model for the world."
             </div>
 
-            <div className="mt-4 blink-text opacity-50 font-mono">
-                [PRESS ANY KEY TO LIBERATE ANOTHER NATION]
+            <div className="mt-8 flex flex-col items-center gap-4">
+                <button
+                    onClick={() => {
+                        playSound('type');
+                        dispatch({ type: 'START_GAME' });
+                    }}
+                    className="text-2xl px-12 py-4 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black animate-pulse"
+                >
+                    [ LIBERATE ANOTHER NATION ]
+                </button>
+                <div className="text-xs opacity-50 uppercase font-mono">
+                    OR PRESS ANY KEY
+                </div>
             </div>
         </div>
     );

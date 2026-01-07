@@ -83,8 +83,19 @@ const DeathScreen = () => {
                 />
             </div>
 
-            <div className="mt-8 blink-text opacity-50">
-                [PRESS ANY KEY TO LIBERATE AGAIN]
+            <div className="mt-8 flex flex-col items-center gap-4">
+                <button
+                    onClick={() => {
+                        playSound('type');
+                        dispatch({ type: 'START_GAME' });
+                    }}
+                    className="text-2xl px-12 py-4 border-red-500 hover:bg-red-500 text-white animate-pulse"
+                >
+                    [ LIBERATE AGAIN ]
+                </button>
+                <div className="text-xs opacity-50 uppercase font-mono">
+                    OR PRESS ANY KEY
+                </div>
             </div>
         </div>
     );
