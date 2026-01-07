@@ -64,7 +64,7 @@ const ChoiceMenu = ({ options, onSelect, title, disabled = false }) => {
                 ))}
             </div>
             <div className="mt-8 text-center text-sm opacity-50">
-                [USE ARROW KEYS OR NUMBERS TO SELECT]
+                [TAP OR USE KEYBOARD TO SELECT]
             </div>
         </div>
     );

@@ -42,13 +42,18 @@ const TitleScreen = () => {
         <div className="flex-col items-center justify-center h-full w-full">
             <ASCIIArt art={TITLE_ART} />
 
-            <div className="mt-4 text-center">
-                <div className="blink-text" style={{ marginTop: '2rem' }}>
-                    <Typewriter
-                        text="[ PRESS ANY KEY TO LIBERATE ]"
-                        speed={50}
-                        className="text-xl"
-                    />
+            <div className="mt-8 text-center">
+                <button
+                    onClick={() => {
+                        playSound('type');
+                        dispatch({ type: 'START_GAME' });
+                    }}
+                    className="text-2xl px-12 py-4 animate-pulse"
+                >
+                    [ INITIATE LIBERATION ]
+                </button>
+                <div className="mt-4 text-xs opacity-50">
+                    OR PRESS ANY KEY
                 </div>
             </div>
         </div>

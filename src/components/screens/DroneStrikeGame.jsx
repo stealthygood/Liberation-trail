@@ -155,9 +155,22 @@ const DroneStrikeGame = () => {
             </div>
 
             {!gameOver && (
-                <div className="mt-8 flex gap-12 text-lg">
-                    <div className="animate-pulse">[SPACE] ENGAGE TARGET</div>
-                    <div>[ESC] ABORT MISSION</div>
+                <div className="mt-8 flex flex-wrap justify-center gap-6 w-full max-w-2xl px-4">
+                    <button
+                        onClick={handleStrike}
+                        className="flex-1 bg-red-900/40 border-red-500 hover:bg-red-500 text-white min-w-[140px]"
+                    >
+                        [ ENGAGE TARGET ]
+                    </button>
+                    <button
+                        onClick={handleAbort}
+                        className="flex-1 border-[var(--color-phosphor-dim)] hover:border-[var(--color-phosphor)] min-w-[140px]"
+                    >
+                        [ ABORT MISSION ]
+                    </button>
+                    <div className="w-full text-center text-xs opacity-50 mt-2">
+                        (OR USE [SPACE] / [ESC] ON KEYBOARD)
+                    </div>
                 </div>
             )}
 
