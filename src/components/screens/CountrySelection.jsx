@@ -17,17 +17,16 @@ const CountrySelection = () => {
     }));
 
     return (
-        <div className="h-full flex-col p-8">
-            <div className="border-[var(--color-phosphor)] border-2 p-4 mb-6">
-                <h2 className="text-xl mb-2">STRATEGIC ANALYSIS COMPLETE</h2>
-                <div className="h-[2px] bg-[var(--color-phosphor)] w-full"></div>
+        <div className="h-full flex-col p-4 md:p-8 items-center">
+            <div className="border-[var(--color-phosphor)] border-2 p-3 mb-4 w-full text-center">
+                <h2 className="text-lg md:text-xl font-bold">STRATEGIC ANALYSIS COMPLETE</h2>
             </div>
 
-            <div className="mb-4 min-h-[60px]">
+            <div className="mb-4 min-h-[40px] text-center">
                 <Typewriter
-                    text="CHOOSE YOUR SOURCE OF OIL... er, I mean, COUNTRY IN NEED OF DEMOCRACY™:"
+                    text="SELECT TARGET NATION:"
                     speed={20}
-                    className="text-xl"
+                    className="text-xl italic opacity-80"
                 />
             </div>
 

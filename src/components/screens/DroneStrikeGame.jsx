@@ -116,28 +116,26 @@ const DroneStrikeGame = () => {
     }, [gameOver]);
 
     return (
-        <div className="h-full flex-col p-8 items-center justify-center font-mono">
-            <h2 className="text-2xl mb-4 text-red-500 animate-pulse">*** PREDATOR FEED - CLASSIFIED ***</h2>
+        <div className="h-full flex-col p-4 items-center justify-center font-mono">
+            <h2 className="text-xl mb-4 text-red-500 animate-pulse text-center">*** PREDATOR FEED - CLASSIFIED ***</h2>
 
-            <div className="relative border-4 border-[var(--color-phosphor)] w-[600px] h-[400px] bg-black overflow-hidden bg-[radial-gradient(circle,rgba(0,50,0,0.4)_0%,rgba(0,0,0,1)_100%)]">
+            <div className="relative border-2 border-[var(--color-phosphor)] w-full max-w-[600px] aspect-video bg-black overflow-hidden bg-[radial-gradient(circle,rgba(0,50,0,0.4)_0%,rgba(0,0,0,1)_100%)]">
                 {/* HUD Elements */}
-                <div className="absolute top-4 left-4 text-xs">
+                <div className="absolute top-2 left-2 text-[10px] opacity-70">
                     <div>LAT: 33.3152 N</div>
                     <div>LON: 44.3661 E</div>
-                    <div>ALT: 15,000 FT</div>
                 </div>
 
-                <div className="absolute top-4 right-4 text-xs text-right">
-                    <div>MODE: AGM-114K LETHAL</div>
+                <div className="absolute top-2 right-2 text-[10px] text-right">
                     <div className={confidence < 30 ? 'text-red-500 animate-blink' : ''}>
-                        INTEL: {confidence}% CONFIDENCE
+                        CONFIDENCE: {confidence}%
                     </div>
-                    <div className="mt-2 text-[var(--color-phosphor-dim)]">TARGET: {target.name}</div>
+                    <div className="mt-1 text-[var(--color-phosphor-dim)]">{target.name}</div>
                 </div>
 
                 {/* Crosshair */}
                 <div
-                    className="absolute w-20 h-20 border-2 border-red-500 rounded-full"
+                    className="absolute w-16 h-16 border-2 border-red-500 rounded-full"
                     style={{
                         left: `${crosshairPos.x}%`,
                         top: `${crosshairPos.y}%`,
@@ -149,28 +147,25 @@ const DroneStrikeGame = () => {
                 </div>
 
                 {/* Status Overlay */}
-                <div className="absolute bottom-4 left-4 right-4 text-center bg-black/80 p-2 border border-[var(--color-phosphor-dim)]">
-                    <div className="text-xl animate-pulse">{status}</div>
+                <div className="absolute bottom-2 left-2 right-2 text-center bg-black/80 p-2 border border-[var(--color-phosphor-dim)]">
+                    <div className="text-lg animate-pulse">{status}</div>
                 </div>
             </div>
 
             {!gameOver && (
-                <div className="mt-8 flex flex-wrap justify-center gap-6 w-full max-w-2xl px-4">
+                <div className="mt-6 flex flex-col items-center gap-4 w-full max-w-sm px-4">
                     <button
                         onClick={handleStrike}
-                        className="flex-1 bg-red-900/40 border-red-500 hover:bg-red-500 text-white min-w-[140px]"
+                        className="bg-red-900/40 border-red-500 hover:bg-red-500 text-white font-bold"
                     >
                         [ ENGAGE TARGET ]
                     </button>
                     <button
                         onClick={handleAbort}
-                        className="flex-1 border-[var(--color-phosphor-dim)] hover:border-[var(--color-phosphor)] min-w-[140px]"
+                        className="border-[var(--color-phosphor-dim)] hover:border-[var(--color-phosphor)] opacity-60"
                     >
                         [ ABORT MISSION ]
                     </button>
-                    <div className="w-full text-center text-xs opacity-50 mt-2">
-                        (OR USE [SPACE] / [ESC] ON KEYBOARD)
-                    </div>
                 </div>
             )}
 

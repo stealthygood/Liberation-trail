@@ -36,35 +36,43 @@ const ChoiceMenu = ({ options, onSelect, title, disabled = false }) => {
     }, [options, onSelect, disabled]);
 
     return (
-        <div className={`w-full max-w-2xl mx-auto mt-8 ${disabled ? 'opacity-50' : ''}`}>
-            {title && <h2 className="mb-4 text-xl">{title}</h2>}
-            <div className="flex-col gap-2 space-y-3">
+        <div className={`w-full max-w-2xl mx-auto mt-6 ${disabled ? 'opacity-50' : ''}`}>
+            {title && (
+                <div className="mb-6 px-4">
+                    <h2 className="text-xl leading-tight border-l-4 border-[var(--color-phosphor)] pl-4">
+                        {title}
+                    </h2>
+                </div>
+            )}
+            <div className="flex-col space-y-4">
                 {options.map((option, index) => (
                     <div
                         key={option.id}
-                        className={`p-4 border-2 transition-colors ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${index === selectedIndex
-                            ? 'border-[var(--color-phosphor)] bg-[rgba(51,255,51,0.1)]'
-                            : 'border-transparent hover:border-[var(--color-phosphor-dim)]'
+                        className={`p-6 border-2 transition-all active:scale-[0.98] ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${index === selectedIndex
+                            ? 'border-[var(--color-phosphor)] bg-[rgba(51,255,51,0.15)] shadow-[0_0_15px_rgba(51,255,51,0.2)]'
+                            : 'border-[rgba(51,255,51,0.2)] hover:border-[var(--color-phosphor-dim)]'
                             }`}
                         onClick={() => !disabled && onSelect(option.id)}
                         onMouseEnter={() => !disabled && setSelectedIndex(index)}
                     >
                         <div className="flex justify-between items-center">
-                            <span className="text-xl">
-                                {index + 1}. {option.name || option.label}
+                            <span className="text-xl font-bold tracking-wide uppercase">
+                                {option.name || option.label}
                             </span>
-                            {index === selectedIndex && <span className="animate-pulse">&lt;&lt;</span>}
+                            {index === selectedIndex && (
+                                <span className="animate-pulse text-[var(--color-phosphor)]">▶</span>
+                            )}
                         </div>
                         {(option.description || option.details) && (
-                            <p className="mt-2 text-sm opacity-80 pl-6">
+                            <p className="mt-3 text-sm opacity-70 line-clamp-2">
                                 {option.description || option.details}
                             </p>
                         )}
                     </div>
                 ))}
             </div>
-            <div className="mt-8 text-center text-sm opacity-50">
-                [TAP OR USE KEYBOARD TO SELECT]
+            <div className="mt-8 text-center text-xs opacity-40 uppercase tracking-widest">
+                [ Tap to Liberrate ]
             </div>
         </div>
     );

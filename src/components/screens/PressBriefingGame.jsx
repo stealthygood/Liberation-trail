@@ -112,41 +112,36 @@ const PressBriefingGame = () => {
     const timerBar = '[' + '█'.repeat(Math.ceil(timer * 4)) + '░'.repeat(20 - Math.ceil(timer * 4)) + ']';
 
     return (
-        <div className="h-full flex-col p-8 items-center justify-center">
-            <div className="w-full max-w-3xl border-2 border-[var(--color-phosphor)] p-6 bg-black/80 relative">
-                <div className="absolute -top-4 left-4 bg-black px-2 text-xl font-bold">
-                    *** WHITE HOUSE PRESS BRIEFING ***
+        <div className="h-full flex-col p-4 md:p-8 items-center justify-center">
+            <div className="w-full max-w-lg border-2 border-[var(--color-phosphor)] p-4 bg-black/80 relative">
+                <div className="text-xs font-bold uppercase tracking-widest text-center mb-4">
+                    *** PRESS BRIEFING ***
                 </div>
 
-                <div className="mb-8 mt-4 text-center">
-                    <div className="text-2xl min-h-[60px]">
+                <div className="mb-6 mt-2 text-center">
+                    <div className="text-lg md:text-xl min-h-[50px] italic">
                         <Typewriter text={currentQ.question} speed={20} />
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center mb-6 text-sm font-mono">
-                    <span>QUICK! CHOOSE YOUR SPIN:</span>
+                <div className="flex justify-between items-center mb-4 text-[10px] font-mono opacity-70">
+                    <span>CHOOSE SPIN:</span>
                     <span className={timer < 2 ? 'text-red-500 animate-pulse' : ''}>
-                        {timer.toFixed(1)}s {timerBar}
+                        {timer.toFixed(1)}s
                     </span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4">
+                <div className="flex-col space-y-3">
                     {currentQ.options.map((option, i) => (
                         <button
                             key={i}
                             disabled={isProcessing}
                             onClick={() => handleSelect(option)}
-                            className="text-left border-2 border-[var(--color-phosphor-dim)] p-4 hover:border-[var(--color-phosphor)] hover:bg-[rgba(51,255,51,0.1)] transition-all group"
+                            className="text-left border-2 border-[var(--color-phosphor-dim)] p-4 hover:border-[var(--color-phosphor)] bg-transparent active:bg-[rgba(51,255,51,0.1)] transition-all font-bold uppercase text-sm"
                         >
-                            <span className="group-hover:animate-pulse mr-2">&gt;</span>
                             {option.text}
                         </button>
                     ))}
-                </div>
-
-                <div className="mt-6 text-center text-xs opacity-50 font-mono">
-                    [WARNING: SILENCE EQUALS GUILT]
                 </div>
             </div>
 

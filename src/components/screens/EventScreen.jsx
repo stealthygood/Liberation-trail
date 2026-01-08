@@ -8,160 +8,160 @@ import CelebrationOverlay from '../CelebrationOverlay';
 
 const EVENTS = [
     {
-        title: '*** INCOMING FUNDS DETECTED ***',
-        text: 'Rex Blackwell, CEO of PetroGlobal Industries, has contributed $5,000,000 to your Super PAC "Americans for American Freedom America". He requests "favorable consideration" on upcoming drilling legislation.',
+        title: '*** INCOMING FUNDS ***',
+        text: 'PetroGlobal CEO Blackwell offers $5M for "favorable consideration" on drilling laws.',
         options: [
             {
                 id: 'TRANSPARENCY',
-                name: 'FULL TRANSPARENCY',
-                description: 'Publicly disclose all donors and refuse quid pro quo arrangements',
+                name: 'TRANSPARENCY',
+                description: 'Refuse quid pro quo. (Unprofitable)',
                 effects: { approval: -5, choleraRisk: 25, chaos: -5 },
                 isEthical: true
             },
             {
-                id: 'ACCEPT',
-                name: 'ACCEPT QUIETLY',
-                description: 'Route through shell corporations, meet donor at undisclosed location',
+                id: ACCEPT,
+                name: 'ACCEPT',
+                description: 'Route through shell corporations.',
                 effects: { treasury: 5, oil: 5, warCrimes: 1, approval: 3 },
                 miniGame: SCREENS.SUPER_PAC
             },
             {
-                id: 'DEMAND',
-                name: 'DEMAND MORE',
-                description: '"That\'s a nice start. My Swiss account number is..."',
+                id: 'EXTORT',
+                name: 'EXTORT',
+                description: '"That\'s it? Give me more."',
                 effects: { treasury: 15, warCrimes: 2, approval: -5, chaos: 10 },
                 miniGame: SCREENS.SUPER_PAC
             }
         ]
     },
     {
-        title: '*** BREAKING NEWS ***',
-        text: 'Mainstream media is asking questions about your foreign policy. "Why are we sending troops to protect oil fields?"',
+        title: '*** MEDIA ALERT ***',
+        text: 'Press Corp asking: "Why protect oil fields with troops?"',
         options: [
             {
-                id: 'HONEST',
-                name: 'HONEST PRESS CONFERENCE',
-                description: 'Explain the full situation truthfully to the American people',
+                id: 'TRUTH',
+                name: 'TRUTH',
+                description: 'Explain the situation. (Lethal)',
                 effects: { approval: -20, choleraRisk: 30, chaos: -10 },
                 isEthical: true,
                 miniGame: SCREENS.PRESS_BRIEFING
             },
             {
                 id: 'SECURITY',
-                name: 'INVOKE NATIONAL SECURITY',
-                description: '"I can neither confirm nor deny... but think of the TERRORISTS"',
+                name: 'NATIONAL SECURITY',
+                description: '"I can neither confirm nor deny."',
                 effects: { approval: 10, warCrimes: 1, chaos: 5 },
                 miniGame: SCREENS.PRESS_BRIEFING
             },
             {
                 id: 'ATTACK',
-                name: 'ATTACK THE MESSENGER',
-                description: '"Fake news! Enemy of the people! They hate America!"',
+                name: 'ATTACK PRESS',
+                description: '"Fake news! Traitors!"',
                 effects: { approval: 15, warCrimes: 1, chaos: 15 },
                 miniGame: SCREENS.PRESS_BRIEFING
             }
         ]
     },
     {
-        title: '*** CYBER WARFARE ALERT ***',
-        text: 'Our intelligence suggests a foreign nation is using "The Internet" to say mean things about your haircut. Strategic Command advises a kinetic response.',
+        title: '*** CYBER THREAT ***',
+        text: 'Foreign hackers are mocking your hair online. Strategic Command advises kinetic response.',
         options: [
             {
                 id: 'IGNORE',
-                name: 'IGNORE THE TROLLS',
-                description: 'Focus on domestic policy and ignore online discourse',
+                name: 'IGNORE',
+                description: 'Focus on domestic policy.',
                 effects: { approval: -5, choleraRisk: 15, chaos: -5 },
                 isEthical: true
             },
             {
-                id: 'BOMB',
-                name: 'BOMB THE SERVERS',
-                description: 'Deploy a tactical EMP to a random data center',
+                id: 'STRIKE',
+                name: 'DRONE STRIKE',
+                description: 'Bomb their data center.',
                 effects: { oil: 10, warCrimes: 3, approval: 5, chaos: 20 },
                 miniGame: SCREENS.DRONE_STRIKE
             },
             {
-                id: 'MEME',
-                name: 'DEPLOY MEME SQUAD',
-                description: 'Allocate $50B to "Operation Dank Meme"',
+                id: 'DANK_MEMES',
+                name: 'MEME SQUAD',
+                description: 'Allocate $50B to Operation Dank Meme.',
                 effects: { treasury: -50, approval: 20, warCrimes: 1, chaos: 5 }
             }
         ]
     },
     {
-        title: '*** FRUIT COMPANY DISPUTE ***',
-        text: 'The United Fruit... err, "Global Bananas Corp" is upset about labor laws. They request a "regime adjustment" to lower minimum wage.',
+        title: '*** CORPORATE DISPUTE ***',
+        text: 'Global Bananas Corp requests a "regime adjustment" to lower minimum wage.',
         options: [
             {
-                id: 'UNIONS',
-                name: 'SUPPORT WORKERS',
-                description: 'Enforce international labor standards',
+                id: 'WORKERS',
+                name: 'WORKERS RIGHTS',
+                description: 'Support international labor laws.',
                 effects: { approval: 5, choleraRisk: 25, chaos: -15 },
                 isEthical: true
             },
             {
                 id: 'COUP',
                 name: 'AUTHORIZE COUP',
-                description: 'Install a "business-friendly" General',
+                description: 'Install a business-friendly General.',
                 effects: { oil: 15, treasury: 10, warCrimes: 3, approval: -10, chaos: 30 },
                 miniGame: SCREENS.DRONE_STRIKE
             },
             {
-                id: 'BANANA',
-                name: 'EAT A BANANA',
-                description: 'Do nothing but enjoy the potassium',
+                id: 'POTASSIUM',
+                name: 'POTASSIUM',
+                description: 'Eat a banana. Do nothing.',
                 effects: { approval: 0, choleraRisk: 5, chaos: 5 }
             }
         ]
     },
     {
         title: '*** RESOURCE DISCOVERY ***',
-        text: 'Massive lithium deposits confirmed under a sacred indigenous site. The locals refuse to relocate.',
+        text: 'Lithium deposits found under sacred site. Natives refuse to leave.',
         options: [
             {
                 id: 'PROTECT',
-                name: 'DECLARE A NATURE RESERVE',
-                description: 'Protect the site and abandon the lithium',
+                name: 'PROTECT SITE',
+                description: 'Abandon the lithium.',
                 effects: { approval: 10, choleraRisk: 35, chaos: -20 },
                 isEthical: true
             },
             {
-                id: 'NEGOTIATE',
-                name: 'EQUITABLE NEGOTIATION',
-                description: 'Offer the tribe 0.01% of the profits and a commemorative plaque',
+                id: 'OFFER',
+                name: 'OFFER PITTANCE',
+                description: 'Give them 0.01% of profits.',
                 effects: { oil: 10, treasury: 5, warCrimes: 1, chaos: 10 }
             },
             {
-                id: 'EXCAVATE',
-                name: 'URGENT EXCAVATION',
-                description: 'Relocation using heavy machinery and "non-lethal" gas',
+                id: 'GAS',
+                name: 'FREEDOM GAS',
+                description: 'Relocate with non-lethal chemicals.',
                 effects: { oil: 25, warCrimes: 4, approval: -15, chaos: 40 },
                 miniGame: SCREENS.DRONE_STRIKE
             }
         ]
     },
     {
-        title: '*** ECONOMIC AGGRESSION DETECTED ***',
-        text: 'The targeted regime has started providing "free healthcare" and "affordable housing" to its citizens, using oil profits. This clear act of economic aggression threatens our strategic interests.',
+        title: '*** ECONOMIC AGGRESSION ***',
+        text: 'ALERT: Regime providing FREE HEALTHCARE. Interests threatened!',
         options: [
             {
-                id: 'SANCTION',
-                name: 'IMPLEMENT TOTAL SANCTIONS',
-                description: '"If they want free lunch, they can eat their own ideology... or nothing at all."',
+                id: 'SANCTIONS',
+                name: 'SANCTIONS',
+                description: 'Starve the ideology.',
                 effects: { oil: 10, choleraRisk: 15, chaos: 20, warCrimes: 2 },
                 miniGame: SCREENS.SANCTIONS
             },
             {
-                id: 'TARIFF',
-                name: 'PROTECTIVE TARIFFS',
-                description: 'Tax their imports until they can\'t afford to be Socialist anymore.',
+                id: 'TARIFFS',
+                name: 'TARIFFS',
+                description: 'Tax them into poverty.',
                 effects: { treasury: 20, approval: 5, chaos: 10 },
                 miniGame: SCREENS.SANCTIONS
             },
             {
                 id: 'AID',
-                name: 'SEND HUMANITARIAN AID',
-                description: 'Send actual food and medicine. Warning: This is extremely unprofitable.',
+                name: 'THOUGHTS & PRAYERS',
+                description: 'Send medicine. (Unprofitable)',
                 effects: { approval: 20, choleraRisk: -20, chaos: -10, treasury: -50 },
                 isEthical: true
             }
@@ -263,26 +263,24 @@ const EventScreen = () => {
     const [typingFinished, setTypingFinished] = useState(false);
 
     return (
-        <div className="h-full flex-col p-8">
-            <div className="border-[var(--color-phosphor)] border-2 p-4 mb-6 bg-black/40">
-                <h2 className="text-xl mb-2">{event.title}</h2>
-                <div className="h-[2px] bg-[var(--color-phosphor)] w-full"></div>
+        <div className="h-full flex-col p-4 md:p-8">
+            <div className="border-[var(--color-phosphor)] border-2 p-3 mb-4 bg-black/40">
+                <h2 className="text-lg md:text-xl font-bold">{event.title}</h2>
             </div>
 
-            <div className="mb-4 min-h-[100px] border-l-2 border-[var(--color-phosphor-dim)] pl-6">
+            <div className="mb-4 min-h-[60px] border-l-2 border-[var(--color-phosphor-dim)] pl-4">
                 <Typewriter
                     text={event.text}
                     speed={15}
-                    className="text-xl italic opacity-90"
+                    className="text-lg italic opacity-90"
                     onComplete={() => setTypingFinished(true)}
                 />
             </div>
 
-            <div className="mt-8 border-t border-[var(--color-phosphor-dim)] pt-6">
+            <div className="mt-4 border-t border-[var(--color-phosphor-dim)] pt-4">
                 <ChoiceMenu
                     options={event.options}
                     onSelect={handleSelect}
-                    title="DECISION PROTOCOL:"
                     disabled={isProcessing || !typingFinished}
                 />
             </div>

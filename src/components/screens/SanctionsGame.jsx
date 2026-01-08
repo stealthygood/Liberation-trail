@@ -109,19 +109,17 @@ const SanctionsGame = () => {
 
     if (gameState === 'READY') {
         return (
-            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                <h2 className="text-3xl mb-6 neon-text">OPERATION: SILENT STARVATION</h2>
-                <div className="max-w-md mb-8 border-2 border-[var(--color-phosphor)] p-6 bg-black/60">
-                    <p className="mb-4 text-xl italic">
-                        "The freedom of a nation is inversely proportional to its ability to import basic necessities."
-                    </p>
-                    <p className="text-sm opacity-80">
-                        INSTRUCTIONS: Block incoming trade ships to "encourage" democratic transitions.
-                        Target the cargo. Ignore the red crosses.
+            <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+                <h2 className="text-2xl mb-4 font-bold tracking-tighter uppercase">OPERATION: SILENT SIEGE</h2>
+                <div className="max-w-sm mb-6 border-2 border-[var(--color-phosphor)] p-4 bg-black/60">
+                    <p className="text-sm italic mb-2">"True freedom includes the freedom to starve."</p>
+                    <p className="text-xs opacity-70 uppercase tracking-tighter">
+                        Tap trade ships to block cargo.
+                        Ignore the red crosses.
                     </p>
                 </div>
-                <button onClick={() => { setGameState('PLAYING'); playSound('success'); }} className="text-2xl px-12 py-4">
-                    [ INITIATE SANCTIONS ]
+                <button onClick={() => { setGameState('PLAYING'); playSound('success'); }}>
+                    [ INITIATE ]
                 </button>
             </div>
         );
@@ -129,12 +127,12 @@ const SanctionsGame = () => {
 
     if (gameState === 'FINISHED') {
         return (
-            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                <h2 className="text-3xl mb-4">SIEGE COMPLETE</h2>
-                <div className="text-2xl mb-8">
-                    SHIPS LIBERATED FROM THEIR CARGO: {shipsBlocked}
+            <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+                <h2 className="text-2xl mb-4 font-bold uppercase">SIEGE COMPLETE</h2>
+                <div className="text-xl mb-6">
+                    CARGO LIBERATED: {shipsBlocked}
                 </div>
-                <button onClick={handleFinish} className="px-12 py-4">
+                <button onClick={handleFinish}>
                     [ VIEW REPERCUSSIONS ]
                 </button>
             </div>
@@ -142,48 +140,35 @@ const SanctionsGame = () => {
     }
 
     return (
-        <div className="relative h-full w-full overflow-hidden bg-[#0a0a0a] border-2 border-[var(--color-phosphor-dim)]" ref={gameContainerRef}>
-            <div className="absolute top-4 left-4 z-20 text-xl font-mono">
-                TIME TO TOTAL COLLAPSE: {timeLeft}s
+        <div className="relative h-full w-full overflow-hidden bg-[#050505] border-2 border-[var(--color-phosphor-dim)]" ref={gameContainerRef}>
+            <div className="absolute top-2 left-2 z-20 text-xs font-mono uppercase opacity-70">
+                COLLAPSE: {timeLeft}s
             </div>
-            <div className="absolute top-4 right-4 z-20 text-xl font-mono">
-                CARGO BLOCKED: {shipsBlocked}
-            </div>
-
-            {/* Ocean background effect */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
-                {Array.from({ length: 10 }).map((_, i) => (
-                    <div key={i} className="h-[2px] w-full bg-[#33ff33] absolute" style={{ top: `${i * 10}%`, opacity: 0.2 }}></div>
-                ))}
+            <div className="absolute top-2 right-2 z-20 text-xs font-mono uppercase">
+                BLOCKED: {shipsBlocked}
             </div>
 
             {ships.map(ship => (
                 <div
                     key={ship.id}
                     onClick={() => blockShip(ship.id, ship.type)}
-                    className={`absolute cursor-pointer transition-transform hover:scale-110 p-2 border ${ship.type === 'MEDICAL' ? 'border-red-500' : 'border-[var(--color-phosphor)]'} bg-black group`}
+                    className={`absolute cursor-pointer transition-transform active:scale-95 p-1 border-2 ${ship.type === 'MEDICAL' ? 'border-red-500' : 'border-[var(--color-phosphor)]'} bg-black`}
                     style={{
                         top: `${ship.top}%`,
                         left: `${ship.left}%`,
                         transform: `translate(-50%, -50%) ${ship.side === 'right' ? 'scaleX(-1)' : ''}`,
-                        width: '80px',
-                        height: '40px'
+                        width: '70px',
+                        height: '35px'
                     }}
                 >
-                    <div className="text-[8px] leading-none mb-1 opacity-60">
-                        {ship.type === 'MEDICAL' ? 'UN RELIEF' : 'TRADE CARGO'}
-                    </div>
-                    <div className="text-xs font-bold truncate">
-                        {ship.type === 'MEDICAL' ? '✚ MEDS' : '🚢 OIL/GRAIN'}
-                    </div>
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-red-600 text-[10px] px-1 hidden group-hover:block whitespace-nowrap">
-                        TAP TO BLOCK
+                    <div className="text-[10px] font-bold text-center leading-tight">
+                        {ship.type === 'MEDICAL' ? '✚' : '🚢'}
                     </div>
                 </div>
             ))}
 
-            <div className="absolute bottom-4 left-0 w-full text-center text-xs opacity-50 z-20">
-                CAUTION: BLOCKING RED CROSS VESSELS MAY RESULT IN MINOR WAR CRIMES
+            <div className="absolute bottom-2 left-0 w-full text-center text-[10px] opacity-40 uppercase tracking-tighter px-2">
+                Note: Blocking Red Cross vessels adds [classified] status.
             </div>
         </div>
     );

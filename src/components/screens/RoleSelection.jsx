@@ -12,15 +12,15 @@ const RoleSelection = () => {
     };
 
     return (
-        <div className="h-full flex-col p-8">
-            <h1 className="text-center text-4xl mb-4">LIBERATION TRAIL</h1>
-            <div className="border-b-2 border-[var(--color-phosphor)] mb-8 opacity-50"></div>
+        <div className="h-full flex-col p-6 items-center">
+            <h1 className="text-center text-3xl mb-2 tracking-tighter">LIBERATION TRAIL</h1>
+            <div className="w-16 h-1 bg-[var(--color-phosphor)] mb-8 opacity-30"></div>
 
-            <div className="mb-8 min-h-[60px]">
+            <div className="mb-6 min-h-[40px] text-center">
                 <Typewriter
-                    text="CHOOSE YOUR LIBERATOR CLASS:"
-                    speed={30}
-                    className="text-2xl"
+                    text="SELECT OPERATIVE CLASS:"
+                    speed={40}
+                    className="text-xl opacity-80"
                 />
             </div>
 

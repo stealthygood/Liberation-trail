@@ -170,37 +170,45 @@ const WarAssistant = () => {
         close();
     };
 
+    useEffect(() => {
+        const handleGlobalClick = () => {
+            if (visible && content?.type === 'quote') {
+                close();
+            }
+        };
+        window.addEventListener('click', handleGlobalClick);
+        return () => window.removeEventListener('click', handleGlobalClick);
+    }, [visible, content, close]);
+
     if (!visible || !content) return null;
 
     return (
-        <div className="war-assistant">
+        <div className={`war-assistant cursor-pointer select-none`} onClick={() => content.type === 'quote' && close()}>
             <div className="war-assistant-inner">
                 <div className="war-assistant-icon">
                     <ASCIIArt art={CLIPPY_ART} />
                 </div>
                 <div className="war-assistant-content">
-                    <div className="war-assistant-header">
-                        WAR ASSISTANT
+                    <div className="war-assistant-header flex justify-between">
+                        <span>WAR ASSISTANT</span>
+                        <span className="opacity-50 text-[10px]">[TAP TO DISMISS]</span>
                     </div>
                     <div className="war-assistant-body">
                         {content.type === 'quote' ? (
-                            <>
-                                <Typewriter text={content.data} speed={20} />
-                                <button
-                                    onClick={close}
-                                    className="war-assistant-btn"
-                                >
-                                    [DISMISS]
-                                </button>
-                            </>
+                            <div className="quote-text">
+                                <Typewriter text={content.data} speed={30} />
+                            </div>
                         ) : (
                             <>
-                                <Typewriter text={content.data.message} speed={15} />
+                                <Typewriter text={content.data.message} speed={20} />
                                 <div className="war-assistant-options">
                                     {content.data.options.map((opt, i) => (
                                         <button
                                             key={i}
-                                            onClick={() => handleOptionClick(opt)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleOptionClick(opt);
+                                            }}
                                             className="war-assistant-option"
                                         >
                                             • {opt.text}
@@ -208,11 +216,14 @@ const WarAssistant = () => {
                                     ))}
                                 </div>
                                 <div className="war-assistant-actions">
-                                    <button onClick={close} className="war-assistant-btn">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            close();
+                                        }}
+                                        className="war-assistant-btn"
+                                    >
                                         [IGNORE]
-                                    </button>
-                                    <button onClick={handleDisable} className="war-assistant-btn danger">
-                                        [DISABLE]
                                     </button>
                                 </div>
                             </>
@@ -220,6 +231,21 @@ const WarAssistant = () => {
                     </div>
                 </div>
             </div>
+            <style jsx>{`
+                .war-assistant {
+                    transition: transform 0.3s ease-out, opacity 0.3s;
+                    animation: slideUp 0.3s ease-out;
+                }
+                @keyframes slideUp {
+                    from { transform: translateY(100%); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+                .quote-text {
+                    font-style: italic;
+                    color: var(--color-phosphor);
+                    line-height: 1.4;
+                }
+            `}</style>
         </div>
     );
 };

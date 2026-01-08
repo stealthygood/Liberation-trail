@@ -40,116 +40,51 @@ const StatusBar = () => {
 
     return (
         <div className="status-bar">
-            {countryData && (
-                <div className="country-card">
-                    <span className="country-label">TARGET:</span>
-                    <span className="country-name">{countryData.name}</span>
-                    <span className="country-divider">│</span>
-                    <span className="country-label">STATUS:</span>
-                    <span className="country-status">{countryData.democracyScore}</span>
+            <div className="status-bar-simple">
+                <div className="status-metric oil-counter">
+                    <span className="metric-icon">🛢️</span>
+                    <span className="metric-value">{stats.oil}B</span>
                 </div>
-            )}
-
-            <div className="status-bar-content">
-                {/* Row 1: Time and Global Perception */}
-                <div className="status-row">
-                    <span className="status-item">
-                        <span className="status-label">TIMELINE:</span>
-                        <span className="status-value">MONTH {stats.month}</span>
-                    </span>
-                    <span className="status-divider">│</span>
-                    <span className="status-item">
-                        <span className="status-label">APPROVAL:</span>
-                        <span className="status-bar-visual">{renderProgressBar(stats.approval)}</span>
-                        <span className="status-value">{stats.approval}%</span>
-                    </span>
-                </div>
-
-                {/* Row 2: Resources and War Efforts */}
-                <div className="status-row">
-                    <span className="status-item">
-                        <span className="status-label">OIL:</span>
-                        <span className="status-bar-visual">{renderProgressBar(stats.oil)}</span>
-                        <span className="status-value">{stats.oil}B</span>
-                    </span>
-                    <span className="status-divider">│</span>
-                    <span className="status-item">
-                        <span className="status-label">$$$:</span>
-                        <span className="status-value treasury">{formatTreasury(stats.treasury)}</span>
-                    </span>
-                </div>
-
-                {/* Row 3: Ethical Indicators */}
-                <div className="status-row">
-                    <span className="status-item">
-                        <span className="status-label">WAR CRIMES:</span>
-                        <span className="status-bar-visual classified">{renderProgressBar(Math.min(stats.warCrimes * 10, 100))}</span>
-                        <span className="status-value classified">(classified)</span>
-                    </span>
-                    <span className="status-divider">│</span>
-                    <span className="status-item">
-                        <span className="status-label">CHAOS:</span>
-                        <span className={`status-bar-visual ${stats.chaos > 70 ? 'dangerPulse' : ''}`}>
-                            {renderProgressBar(stats.chaos)}
-                        </span>
-                        <span className={`status-value ${stats.chaos > 70 ? 'dangerPulse' : ''}`}>
-                            {stats.chaos}%
-                        </span>
-                    </span>
-                </div>
-
-                {/* Row 4: The Joke and The Risk */}
-                <div className="status-row">
-                    <span className="status-item">
-                        <span className="status-label">DEMOCRACY™:</span>
-                        <span className="status-bar-visual dim">{renderProgressBar(stats.democracy)}</span>
-                    </span>
-                    <span className="status-divider">│</span>
-                    <span className="status-item">
-                        <span className="status-label cholera">CHOLERA RISK:</span>
-                        <span className={`status-bar-visual ${stats.choleraRisk > 50 ? 'dangerPulse' : ''}`}>
-                            {renderProgressBar(stats.choleraRisk)}
-                        </span>
-                        <span className={`status-value ${stats.choleraRisk > 50 ? 'dangerPulse' : ''}`}>
-                            {stats.choleraRisk}%
-                        </span>
-                    </span>
+                <div className="status-metric war-crimes-flicker">
+                    <span className="metric-label">WAR CRIMES:</span>
+                    <span className="metric-value classified">[CLASSIFIED]</span>
                 </div>
             </div>
             <style>{`
-                @media (max-width: 600px) {
-                    .status-bar-content { padding: 4px 8px; }
-                    .status-row { gap: 4px; }
-                    .status-label { min-width: 60px; font-size: 0.65rem; }
-                    .status-value { font-size: 0.65rem; min-width: 30px; }
-                    .status-bar-visual { font-size: 0.6rem; letter-spacing: 0; }
-                    .status-divider { display: none; }
-                }
-                .country-card {
+                .status-bar-simple {
                     display: flex;
-                    justify-content: center;
-                    gap: 12px;
-                    background: var(--color-phosphor);
-                    color: #000;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 12px 20px;
+                    background: rgba(0, 0, 0, 0.9);
+                    border-bottom: 2px solid var(--color-phosphor);
+                    font-family: var(--font-main);
+                }
+                .oil-counter {
+                    font-size: 1.8rem;
                     font-weight: bold;
-                    padding: 2px 8px;
-                    font-size: 0.75rem;
-                    text-transform: uppercase;
-                    margin-bottom: 4px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
                 }
-                @media (max-width: 600px) {
-                    .country-card { font-size: 0.65rem; gap: 8px; }
-                    .country-divider { display: none; }
+                .war-crimes-flicker {
+                    font-size: 0.8rem;
+                    opacity: 0.8;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
                 }
-                .country-label { opacity: 0.7; }
-                .dangerPulse {
-                    color: #ff3333;
-                    text-shadow: 0 0 5px #ff3333;
-                    animation: pulse-danger 1s infinite;
+                .war-crimes-flicker .metric-value {
+                    animation: flicker 0.2s infinite;
+                    color: #ffaa00;
                 }
-                @keyframes pulse-danger {
+                @keyframes flicker {
                     0%, 100% { opacity: 1; }
-                    50% { opacity: 0.6; }
+                    50% { opacity: 0.3; }
+                }
+                @media (min-width: 1025px) {
+                    .oil-counter { font-size: 2.2rem; }
+                    .war-crimes-flicker { font-size: 1rem; }
                 }
             `}</style>
         </div>

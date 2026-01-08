@@ -130,20 +130,20 @@ const RedactionGame = () => {
     }, [suspicion]);
 
     return (
-        <div className="h-full flex-col p-8 items-center justify-center">
-            <div className="text-center mb-6">
-                <h2 className="text-3xl mb-2 text-red-500 animate-pulse">*** REDACTION RUSH ***</h2>
-                <p className="text-sm opacity-80 mb-4">TAP THE WAR CRIMES BEFORE THE PRESS SEES THEM!</p>
+        <div className="h-full flex-col p-4 md:p-8 items-center justify-center">
+            <div className="text-center mb-4">
+                <h2 className="text-xl mb-1 text-red-500 animate-pulse font-bold tracking-tighter uppercase">*** REDACTION RUSH ***</h2>
+                <p className="text-[10px] opacity-70 mb-2 uppercase">Tap to redact evidence before publication!</p>
 
-                <div className="flex justify-between w-full max-w-2xl text-xs font-mono mb-2">
-                    <span>TIME: {timer.toFixed(1)}s {timerBar}</span>
+                <div className="flex justify-between w-full max-w-lg text-[10px] font-mono mb-2 px-1">
+                    <span>TIME: {timer.toFixed(1)}s</span>
                     <span className={suspicion > 70 ? 'text-red-500' : ''}>
-                        PRESS SUSPICION: {suspicionBar} {suspicion}%
+                        SUSPICION: {suspicion}%
                     </span>
                 </div>
             </div>
 
-            <div className="border border-[var(--color-phosphor)] p-6 max-w-2xl w-full font-mono text-lg bg-black/50 leading-loose relative overflow-hidden">
+            <div className="border border-[var(--color-phosphor)] p-4 max-w-lg w-full font-mono text-sm bg-black/60 leading-relaxed relative overflow-hidden">
                 {currentChunks.map((chunk) => {
                     const isRedacted = chunk.redacted;
                     const isSensitive = chunk.type === 'sensitive';
@@ -153,9 +153,9 @@ const RedactionGame = () => {
                             key={chunk.id}
                             onClick={() => handleRedact(chunk.id)}
                             className={`
-                                transition-all duration-300 px-1 inline-block
-                                ${!isRedacted && 'cursor-pointer hover:bg-[var(--color-phosphor)] hover:text-black'}
-                                ${isRedacted ? 'bg-[var(--color-phosphor)] text-[var(--color-phosphor)] select-none' : ''}
+                                transition-all duration-200 px-0.5 inline-block select-none
+                                ${!isRedacted && 'cursor-pointer active:bg-[var(--color-phosphor)] active:text-black'}
+                                ${isRedacted ? 'bg-[var(--color-phosphor)] text-[var(--color-phosphor)]' : ''}
                                 ${isSensitive && !isRedacted && 'animate-blink text-red-400 font-bold'}
                             `}
                         >
@@ -165,23 +165,23 @@ const RedactionGame = () => {
                 })}
 
                 {suspicion >= 100 && (
-                    <div className="absolute inset-0 bg-red-900/80 flex items-center justify-center text-3xl font-bold animate-pulse text-white">
+                    <div className="absolute inset-0 bg-red-900/90 flex items-center justify-center text-2xl font-bold animate-pulse text-white uppercase">
                         LEAKED!
                     </div>
                 )}
             </div>
 
-            <div className="mt-8 flex gap-8 text-sm font-mono">
-                <div>REDACTED: {redactedCount}/4</div>
-                <div>LEAKED: {leakedCount}</div>
+            <div className="mt-4 flex gap-6 text-[10px] font-mono opacity-60">
+                <span>REDACTED: {redactedCount}/4</span>
+                <span>STATUS: {suspicion < 100 ? 'SECURE' : 'COMPROMISED'}</span>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6">
                 <button
                     onClick={() => handleComplete(suspicion, leakedCount)}
-                    className="border-2 border-[var(--color-phosphor)] px-6 py-2 hover:bg-[var(--color-phosphor)] hover:text-black transition-colors"
+                    className="border-2 border-[var(--color-phosphor)] px-6 py-3 font-bold uppercase text-sm"
                 >
-                    SUBMIT FOR DECLASSIFICATION
+                    [ DECLASSIFY ]
                 </button>
             </div>
 

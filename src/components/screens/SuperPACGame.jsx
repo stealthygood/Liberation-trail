@@ -84,46 +84,45 @@ const SuperPACGame = () => {
     };
 
     return (
-        <div className="h-full flex-col p-8 items-center justify-center font-mono">
-            <h2 className="text-2xl mb-8 text-[var(--color-phosphor)]">*** CAMPAIGN FINANCE SHUFFLE ***</h2>
+        <div className="h-full flex-col p-4 md:p-8 items-center justify-center font-mono">
+            <h2 className="text-xl mb-6 text-[var(--color-phosphor)] font-bold text-center tracking-tighter uppercase">*** FINANCE SHUFFLE ***</h2>
 
-            <div className="w-full max-w-2xl border-2 border-[var(--color-phosphor)] p-6 bg-black/80">
-                <div className="mb-6">
-                    <div className="flex justify-between mb-2">
-                        <span>FUNDS ROUTED: ${moneyRouted.toFixed(1)}M / $5.0M</span>
-                        <span>{Math.round((moneyRouted / totalToRoute) * 100)}%</span>
+            <div className="w-full max-w-md border-2 border-[var(--color-phosphor)] p-4 bg-black/80">
+                <div className="mb-4">
+                    <div className="flex justify-between text-[10px] mb-1 opacity-70">
+                        <span>FUNDS ROUTED:</span>
+                        <span>${moneyRouted.toFixed(1)}M / $5M</span>
                     </div>
-                    {renderProgressBar((moneyRouted / totalToRoute) * 100)}
+                    <div className="h-4 border border-[var(--color-phosphor-dim)] overflow-hidden">
+                        <div className="h-full bg-[var(--color-phosphor)] transition-all" style={{ width: `${(moneyRouted / totalToRoute) * 100}%` }}></div>
+                    </div>
                 </div>
 
-                <div className="mb-8">
-                    <div className="flex justify-between mb-2">
+                <div className="mb-6">
+                    <div className="flex justify-between text-[10px] mb-1 opacity-70">
                         <span className={suspicion > 70 ? 'text-red-500 animate-pulse' : ''}>FEC SUSPICION:</span>
                         <span className={suspicion > 70 ? 'text-red-500' : ''}>{suspicion}%</span>
                     </div>
-                    <div className={suspicion > 70 ? 'text-red-500' : ''}>
-                        {renderProgressBar(suspicion)}
+                    <div className="h-4 border border-[var(--color-phosphor-dim)] overflow-hidden">
+                        <div className={`h-full transition-all ${suspicion > 70 ? 'bg-red-500' : 'bg-[var(--color-phosphor-dim)]'}`} style={{ width: `${suspicion}%` }}></div>
                     </div>
                 </div>
 
-                <div className="bg-black/50 p-4 border border-[var(--color-phosphor-dim)] mb-6 min-h-[50px] text-center">
-                    <div className="text-xl animate-pulse">{status}</div>
+                <div className="bg-black/50 p-3 border border-[var(--color-phosphor-dim)] mb-6 min-h-[40px] text-center">
+                    <div className="text-lg animate-pulse uppercase text-xs">{status}</div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3">
+                <div className="flex-col gap-2">
                     {SHELL_COMPANIES.map((company) => (
                         <button
                             key={company.id}
                             disabled={gameOver}
                             onClick={() => handleRoute(company)}
-                            className="bg-transparent border border-[var(--color-phosphor-dim)] p-3 text-left hover:border-[var(--color-phosphor)] hover:bg-[rgba(51,255,51,0.1)] transition-all flex justify-between items-center group"
+                            className="w-full bg-transparent border border-[var(--color-phosphor-dim)] p-3 text-left active:bg-[rgba(51,255,51,0.1)] transition-all flex justify-between items-center group"
                         >
                             <div>
-                                <div className="text-sm font-bold">{company.name}</div>
-                                <div className="text-xs opacity-60">{company.description}</div>
-                            </div>
-                            <div className="text-xs font-mono text-[var(--color-phosphor-dim)] group-hover:text-[var(--color-phosphor)]">
-                                TRACE: {company.trace}%
+                                <div className="text-sm font-bold uppercase tracking-tight">{company.name}</div>
+                                <div className="text-[10px] opacity-40 uppercase">{company.description}</div>
                             </div>
                         </button>
                     ))}

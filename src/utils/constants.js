@@ -18,23 +18,23 @@ export const SCREENS = {
 export const ROLES = [
     {
         id: 'DIPLOMAT',
-        name: 'CAREER DIPLOMAT',
-        description: 'Speaks softly, carries a big stick, and a bigger offshore account'
+        name: 'DIPLOMAT',
+        description: 'Speaks softly, carries offshore accounts'
     },
     {
         id: 'OPERATIVE',
-        name: 'INTELLIGENCE OPERATIVE',
+        name: 'SPOOK',
         description: 'Democracy doesn\'t install itself'
     },
     {
         id: 'CONSULTANT',
-        name: 'ENERGY SECTOR CONSULTANT',
-        description: 'What\'s good for Exxon is good for America'
+        name: 'OILMAN',
+        description: 'What\'s good for Exxon...'
     },
     {
         id: 'CONTRACTOR',
-        name: 'DEFENSE CONTRACTOR',
-        description: 'Peace doesn\'t pay the shareholders'
+        name: 'CONTRACTOR',
+        description: 'Peace doesn\'t pay dividends'
     }
 ];
 
