@@ -75,10 +75,10 @@ const StatusBar = () => {
                     align-items: flex-end;
                 }
                 .war-crimes-flicker .metric-value {
-                    animation: flicker 0.2s infinite;
+                    animation: war-crimes-flicker 0.2s infinite;
                     color: #ffaa00;
                 }
-                @keyframes flicker {
+                @keyframes war-crimes-flicker {
                     0%, 100% { opacity: 1; }
                     50% { opacity: 0.3; }
                 }
