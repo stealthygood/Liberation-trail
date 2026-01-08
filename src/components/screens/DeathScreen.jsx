@@ -89,6 +89,11 @@ const DeathScreen = () => {
                         playSound('type');
                         dispatch({ type: 'START_GAME' });
                     }}
+                    onTouchEnd={(e) => {
+                        e.preventDefault();
+                        playSound('type');
+                        dispatch({ type: 'START_GAME' });
+                    }}
                     className="text-2xl px-12 py-4 border-red-500 hover:bg-red-500 text-white animate-pulse"
                 >
                     [ LIBERATE AGAIN ]

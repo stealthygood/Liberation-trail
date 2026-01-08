@@ -99,6 +99,11 @@ const VictoryScreen = () => {
                         playSound('type');
                         dispatch({ type: 'START_GAME' });
                     }}
+                    onTouchEnd={(e) => {
+                        e.preventDefault();
+                        playSound('type');
+                        dispatch({ type: 'START_GAME' });
+                    }}
                     className="text-2xl px-12 py-4 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black animate-pulse"
                 >
                     [ LIBERATE ANOTHER NATION ]
