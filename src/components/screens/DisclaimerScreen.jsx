@@ -51,7 +51,11 @@ const DisclaimerScreen = () => {
 
             <button
                 onClick={proceed}
-                className="text-2xl px-12 py-4 animate-pulse mt-8"
+                onTouchEnd={(e) => {
+                    e.preventDefault();
+                    proceed();
+                }}
+                className="text-2xl px-12 py-4 border-[var(--color-phosphor)] hover:bg-[var(--color-phosphor)] hover:text-black animate-pulse mt-8"
             >
                 [ BEGIN LIBERATION ]
             </button>
