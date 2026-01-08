@@ -4,6 +4,8 @@ import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
 import CelebrationOverlay from '../CelebrationOverlay';
 import MiniGameIntro from '../MiniGameIntro';
+import ScreenLayout from '../ScreenLayout';
+import { useMiniGame } from '../../hooks/useMiniGame';
 
 const REPORT_TEMPLATE = `TOP SECRET // EYES ONLY
 SUBJECT: AFTER-ACTION REPORT - OPERATION LIBERATION
@@ -18,20 +20,21 @@ authorized by {REDACTED}.
 
 Status: [DEMOCRACY RESTORED]`;
 
-// {SENSITIVE} = Must redact. Missing these increases leak risk/suspicion.
-// [DECOY] = Should NOT redact. Redacting these increases suspicion.
-
 const RedactionGame = () => {
     const { dispatch } = useGame();
     const [timer, setTimer] = useState(12);
     const [suspicion, setSuspicion] = useState(0);
     const [redactedCount, setRedactedCount] = useState(0);
-    const [leakedCount] = useState(0); // setLeakedCount removed as it's not currently used
     const [gameOver, setGameOver] = useState(false);
-    const [showIntro, setShowIntro] = useState(true);
-    const [statsGained, setStatsGained] = useState(null);
 
-    // Parse the report text into interactive chunks
+    const {
+        showIntro,
+        setShowIntro,
+        statsGained,
+        completeMiniGame,
+        handleCelebrationComplete
+    } = useMiniGame();
+
     const chunks = useMemo(() => {
         const regex = /(\{.*?\}|\[.*?\])/g;
         return REPORT_TEMPLATE.split(regex).map((text, index) => {
@@ -56,38 +59,34 @@ const RedactionGame = () => {
 
         const isSuccess = finalSuspicion < 100 && finalLeaked < 3;
 
-        // Apply stat changes based on performance
         const statChanges = {
-            approval: isSuccess ? 5 : -15,
+            approval: isSuccess ? 10 : -15,
             warCrimes: finalLeaked > 0 ? finalLeaked : 0,
             choleraRisk: isSuccess ? 0 : 10
         };
-        dispatch({ type: 'MODIFY_STATS', payload: statChanges });
 
         if (isSuccess) {
             playSound('success');
-            const effects = { approval: 10, fifaPrize: true };
-            setStatsGained(effects);
+            completeMiniGame(statChanges);
         } else {
             playSound('error');
+            dispatch({ type: 'MODIFY_STATS', payload: statChanges });
             setTimeout(() => {
                 dispatch({ type: 'NAVIGATE', payload: SCREENS.DEATH });
             }, 1000);
         }
-    }, [gameOver, dispatch]);
+    }, [gameOver, dispatch, completeMiniGame]);
 
-    // Timer logic
     useEffect(() => {
-        if (gameOver) return;
+        if (gameOver || showIntro) return;
 
         if (timer > 0) {
             const interval = setInterval(() => {
                 setTimer(t => {
                     if (t <= 0.1) {
                         clearInterval(interval);
-                        // Check for unredacted sensitive words at the end
                         const sensitiveLeft = currentChunks.filter(c => c.type === 'sensitive' && !c.redacted).length;
-                        handleComplete(suspicion, leakedCount + sensitiveLeft);
+                        handleComplete(suspicion, sensitiveLeft);
                         return 0;
                     }
                     return t - 0.1;
@@ -95,7 +94,7 @@ const RedactionGame = () => {
             }, 100);
             return () => clearInterval(interval);
         }
-    }, [timer, gameOver, currentChunks, suspicion, leakedCount, handleComplete]);
+    }, [timer, gameOver, currentChunks, suspicion, handleComplete, showIntro]);
 
     const handleRedact = (id) => {
         if (gameOver) return;
@@ -107,9 +106,9 @@ const RedactionGame = () => {
                 if (chunk.type === 'sensitive') {
                     setRedactedCount(c => c + 1);
                 } else if (chunk.type === 'decoy') {
-                    setSuspicion(s => Math.min(100, s + 20)); // Redacting decoys is suspicious
+                    setSuspicion(s => Math.min(100, s + 20));
                 } else {
-                    setSuspicion(s => Math.min(100, s + 5)); // Redacting random text is slightly suspicious
+                    setSuspicion(s => Math.min(100, s + 5));
                 }
 
                 return { ...chunk, redacted: true };
@@ -118,22 +117,8 @@ const RedactionGame = () => {
         }));
     };
 
-    // Calculate ASCII Progress Bar for timer
-    const timerBar = useMemo(() => {
-        const length = 20;
-        const filled = Math.ceil((timer / 12) * length);
-        return '[' + '█'.repeat(filled) + '░'.repeat(length - filled) + ']';
-    }, [timer]);
-
-    // Calculate Suspicion Bar
-    const suspicionBar = useMemo(() => {
-        const length = 10;
-        const filled = Math.min(length, Math.ceil((suspicion / 100) * length));
-        return '█'.repeat(filled) + '░'.repeat(length - filled);
-    }, [suspicion]);
-
     return (
-        <div className="h-full flex-col p-4 md:p-8 items-center justify-center">
+        <ScreenLayout>
             <div className="text-center mb-4">
                 <h2 className="text-xl mb-1 text-red-500 animate-pulse font-bold tracking-tighter uppercase">*** REDACTION RUSH ***</h2>
                 <p className="text-[10px] opacity-70 mb-2 uppercase">Tap to redact evidence before publication!</p>
@@ -146,7 +131,7 @@ const RedactionGame = () => {
                 </div>
             </div>
 
-            <div className="border border-[var(--color-phosphor)] p-4 max-w-lg w-full font-mono text-sm bg-black/60 leading-relaxed relative overflow-hidden">
+            <div className="border border-[var(--color-phosphor)] p-4 max-w-lg w-full font-mono text-sm bg-black/60 leading-relaxed relative overflow-hidden mx-auto">
                 {currentChunks.map((chunk) => {
                     const isRedacted = chunk.redacted;
                     const isSensitive = chunk.type === 'sensitive';
@@ -174,14 +159,14 @@ const RedactionGame = () => {
                 )}
             </div>
 
-            <div className="mt-4 flex gap-6 text-[10px] font-mono opacity-60">
+            <div className="mt-4 flex gap-6 text-[10px] font-mono opacity-60 justify-center">
                 <span>REDACTED: {redactedCount}/4</span>
                 <span>STATUS: {suspicion < 100 ? 'SECURE' : 'COMPROMISED'}</span>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 text-center">
                 <button
-                    onClick={() => handleComplete(suspicion, leakedCount)}
+                    onClick={() => handleComplete(suspicion, currentChunks.filter(c => c.type === 'sensitive' && !c.redacted).length)}
                     className="border-2 border-[var(--color-phosphor)] px-6 py-3 font-bold uppercase text-sm"
                 >
                     [ DECLASSIFY ]
@@ -197,6 +182,7 @@ const RedactionGame = () => {
                     animation: blink 0.5s infinite;
                 }
             `}</style>
+
             {showIntro && (
                 <MiniGameIntro
                     title="OPERATION: INK BLOT"
@@ -209,13 +195,10 @@ const RedactionGame = () => {
             {statsGained && (
                 <CelebrationOverlay
                     statsGained={statsGained}
-                    onComplete={() => {
-                        setStatsGained(null);
-                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-                    }}
+                    onComplete={() => handleCelebrationComplete(SCREENS.EVENT)}
                 />
             )}
-        </div>
+        </ScreenLayout>
     );
 };
 

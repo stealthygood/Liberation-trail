@@ -33,7 +33,7 @@ const ChoiceMenu = ({ options, onSelect, title, disabled = false }) => {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [options, onSelect, disabled]);
+    }, [options, onSelect, disabled, selectedIndex]);
 
     return (
         <div className={`w-full max-w-2xl mx-auto mt-6 ${disabled ? 'opacity-50' : ''}`}>

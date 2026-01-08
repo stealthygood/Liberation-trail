@@ -1,9 +1,9 @@
-import { useState, useCallback } from 'react';
-import { useGame } from '../../context/GameContext';
+import { useState } from 'react';
 import { SCREENS } from '../../utils/constants';
-import { playSound } from '../../utils/SoundManager';
 import Typewriter from '../Typewriter';
 import CelebrationOverlay from '../CelebrationOverlay';
+import ScreenLayout from '../ScreenLayout';
+import { useEventProcessor } from '../../hooks/useEventProcessor';
 
 const RANDOM_EVENTS = [
     {
@@ -39,38 +39,18 @@ const RANDOM_EVENTS = [
 ];
 
 const RandomEventScreen = () => {
-    const { dispatch } = useGame();
     const [event] = useState(() => RANDOM_EVENTS[Math.floor(Math.random() * RANDOM_EVENTS.length)]);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [statsGained, setStatsGained] = useState(null);
 
-    const handleSelect = useCallback((option) => {
-        if (isProcessing) return;
-        setIsProcessing(true);
-        playSound('type');
+    const {
+        isProcessing,
+        statsGained,
+        processChoice,
+        completeCelebration
+    } = useEventProcessor();
 
-        dispatch({ type: 'MODIFY_STATS', payload: option.effects });
-
-        if (option.isEthical && Math.random() < 0.3) {
-            playSound('error');
-            setTimeout(() => {
-                dispatch({ type: 'NAVIGATE', payload: SCREENS.DEATH });
-            }, 500);
-            return;
-        }
-
-        // Trigger celebration for profitable choices
-        const isProfitable = (option.effects?.oil > 0 || option.effects?.treasury > 0) && !option.isEthical;
-        if (isProfitable) {
-            setStatsGained(option.effects);
-            return;
-        }
-
-        playSound('success');
-        setTimeout(() => {
-            dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-        }, 800);
-    }, [isProcessing, dispatch]);
+    const handleSelect = (option) => {
+        processChoice(option, event.title);
+    };
 
     const getColors = () => {
         switch (event.type) {
@@ -82,7 +62,7 @@ const RandomEventScreen = () => {
     };
 
     return (
-        <div className="h-full flex-col p-4 md:p-8 items-center justify-center">
+        <ScreenLayout className="items-center">
             <div className={`w-full max-w-lg border-2 p-5 ${getColors()} relative animate-in fade-in zoom-in duration-300`}>
                 <div className="text-xs font-bold opacity-80 mb-2 tracking-widest uppercase">{event.title}</div>
                 <div className="h-[1px] bg-current w-full mb-4 opacity-30"></div>
@@ -99,6 +79,7 @@ const RandomEventScreen = () => {
                     {event.options.map((opt, i) => (
                         <button
                             key={i}
+                            disabled={isProcessing}
                             onClick={() => handleSelect(opt)}
                             className="w-full text-center border-2 border-current p-4 hover:bg-white/10 transition-all font-bold text-lg uppercase mb-3"
                         >
@@ -111,19 +92,14 @@ const RandomEventScreen = () => {
             {statsGained && (
                 <CelebrationOverlay
                     statsGained={statsGained}
-                    onComplete={() => {
-                        setStatsGained(null);
-                        playSound('success');
-                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-                        setIsProcessing(false);
-                    }}
+                    onComplete={() => completeCelebration(() => SCREENS.EVENT)}
                 />
             )}
 
-            <div className="mt-8 text-xs opacity-50 uppercase tracking-widest">
+            <div className="mt-8 text-xs opacity-50 uppercase tracking-widest text-center w-full">
                 Urgent Transmission Required
             </div>
-        </div>
+        </ScreenLayout>
     );
 };
 

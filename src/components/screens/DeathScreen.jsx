@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useGame } from '../../context/GameContext';
 import Typewriter from '../Typewriter';
 import ASCIIArt from '../ASCIIArt';
+import ScreenLayout from '../ScreenLayout';
 import { playSound } from '../../utils/SoundManager';
 
 const DEATH_VARIANTS = [
@@ -63,23 +64,23 @@ const DeathScreen = () => {
     }, [dispatch]);
 
     return (
-        <div className="h-full flex-col items-center justify-center p-8 text-center">
-            <div className="text-red-500 mb-4">
+        <ScreenLayout center>
+            <div className="text-red-500 mb-2 scale-75 md:scale-100">
                 <ASCIIArt art={SKULL_ART} />
             </div>
 
-            <h1 className="text-4xl mb-4 text-red-500 tracking-widest" style={{ textShadow: '0 0 10px red' }}>
-                YOU &nbsp;&nbsp;&nbsp; HAVE &nbsp;&nbsp;&nbsp; DIED
+            <h1 className="text-4xl md:text-6xl mb-6 text-red-500 tracking-widest font-black italic" style={{ textShadow: '0 0 20px red' }}>
+                YOU HAVE DIED
             </h1>
 
-            <div className="border border-red-900 bg-red-950/20 p-4 mb-8 text-xs font-mono uppercase tracking-widest">
-                Global Statistics: {persistence.choleraDeaths + 1} patriots have died of cholera in this workspace
+            <div className="border-2 border-red-500 bg-red-950/40 p-3 md:p-6 mb-8 text-sm md:text-base font-mono uppercase tracking-widest text-red-400 max-w-2xl w-full">
+                <span className="opacity-60">GLOBAL TOLL:</span> <span className="font-bold">{persistence.choleraDeaths + 1}</span> PATRIOTS LOST TO CHOLERA
             </div>
 
-            <div className="mb-8 max-w-2xl text-xl min-h-[100px]">
+            <div className="mb-8 max-w-2xl text-xl md:text-2xl min-h-[120px] leading-relaxed text-red-500/90 font-mono italic">
                 <Typewriter
                     text={variant.message}
-                    speed={25}
+                    speed={30}
                 />
             </div>
 
@@ -102,7 +103,7 @@ const DeathScreen = () => {
                     OR PRESS ANY KEY
                 </div>
             </div>
-        </div>
+        </ScreenLayout>
     );
 };
 

@@ -37,31 +37,33 @@ const CelebrationOverlay = ({ statsGained, onComplete }) => {
 
     return (
         <div className="celebration-overlay celebration-shake">
-            {sparks.map(spark => (
-                <div
-                    key={spark.id}
-                    className="absolute text-xl pointer-events-none opacity-0"
-                    style={{
-                        top: `${spark.top}%`,
-                        left: `${spark.left}%`,
-                        animation: `firework-burst 0.6s ease-out ${spark.delay}s forwards`,
-                        color: 'var(--color-phosphor)'
-                    }}
-                >
-                    {spark.char}
-                </div>
-            ))}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {sparks.map(spark => (
+                    <div
+                        key={spark.id}
+                        className="absolute text-xl opacity-0"
+                        style={{
+                            top: `${spark.top}%`,
+                            left: `${spark.left}%`,
+                            animation: `firework-burst 0.6s ease-out ${spark.delay}s forwards`,
+                            color: 'var(--color-phosphor)'
+                        }}
+                    >
+                        {spark.char}
+                    </div>
+                ))}
+            </div>
 
-            <div className="z-10 p-12 border-4 border-double border-[var(--color-phosphor)] bg-black shadow-[0_0_80px_rgba(51,255,51,0.6)] text-center max-w-[90vw] animate-in zoom-in duration-300">
-                <h1 className="text-4xl md:text-6xl font-black mb-6 neon-text-pulse tracking-tighter italic uppercase">
+            <div className="relative z-10 p-8 md:p-12 border-4 border-double border-[var(--color-phosphor)] bg-black shadow-[0_0_80px_rgba(51,255,51,0.6)] text-center max-w-[95vw] md:max-w-2xl animate-in zoom-in duration-300">
+                <h1 className="text-4xl md:text-7xl font-black mb-6 neon-text-pulse tracking-tighter italic uppercase bg-black/60 px-6 py-3 border-y-2 border-[var(--color-phosphor)]" style={{ textShadow: '0 0 40px var(--color-phosphor)' }}>
                     {message}
                 </h1>
 
-                <div className="text-2xl md:text-3xl mb-6 font-mono text-[var(--color-phosphor)] animate-bounce">
+                <div className="text-xl md:text-2xl mb-4 font-mono text-[var(--color-phosphor)] animate-bounce">
                     FREEDOM INTENSIFIES! 🇺🇸🛢️
                 </div>
 
-                <div className="space-y-4 text-xl md:text-2xl font-mono border-t border-[var(--color-phosphor-dim)] pt-6 mt-6">
+                <div className="space-y-3 text-lg md:text-xl font-mono border-t border-[var(--color-phosphor-dim)] pt-4 mt-4">
                     {statsGained.oil > 0 && (
                         <div className="text-green-400">+{statsGained.oil}B SECURED FOR THE FREE WORLD</div>
                     )}
@@ -73,7 +75,7 @@ const CelebrationOverlay = ({ statsGained, onComplete }) => {
                     )}
 
                     {statsGained.fifaPrize && (
-                        <div className="mt-8 p-4 border-4 border-yellow-500 text-yellow-500 font-black animate-pulse bg-white/5">
+                        <div className="mt-6 p-3 border-4 border-yellow-500 text-yellow-500 font-black animate-pulse bg-white/5">
                             🏆 NATIONAL ACHIEVEMENT UNLOCKED 🏆
                             <br />
                             FIFA WORLD PEACE PRIZE AWARDED
@@ -81,13 +83,6 @@ const CelebrationOverlay = ({ statsGained, onComplete }) => {
                     )}
                 </div>
             </div>
-
-            <style>{`
-                @keyframes firework-burst {
-                    0% { transform: scale(0); opacity: 1; }
-                    100% { transform: scale(3); opacity: 0; }
-                }
-            `}</style>
         </div>
     );
 };

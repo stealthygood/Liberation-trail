@@ -5,6 +5,8 @@ import { playSound } from '../../utils/SoundManager';
 import Typewriter from '../Typewriter';
 import CelebrationOverlay from '../CelebrationOverlay';
 import MiniGameIntro from '../MiniGameIntro';
+import ScreenLayout from '../ScreenLayout';
+import { useMiniGame } from '../../hooks/useMiniGame';
 
 const QUESTIONS = [
     {
@@ -45,8 +47,14 @@ const PressBriefingGame = () => {
     const [timer, setTimer] = useState(5); // 5 seconds to answer
     const [gameOver, setGameOver] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [showIntro, setShowIntro] = useState(true);
-    const [statsGained, setStatsGained] = useState(null);
+
+    const {
+        showIntro,
+        setShowIntro,
+        statsGained,
+        completeMiniGame,
+        handleCelebrationComplete
+    } = useMiniGame();
 
     const currentQ = QUESTIONS[qIndex];
 
@@ -77,12 +85,11 @@ const PressBriefingGame = () => {
             } else {
                 setGameOver(true);
                 playSound('success');
-                const effects = { approval: 10, fifaPrize: true };
-                dispatch({ type: 'MODIFY_STATS', payload: effects });
-                setStatsGained(effects);
+                const effects = { approval: 10, warCrimes: 0 };
+                completeMiniGame(effects);
             }
         }, 800);
-    }, [qIndex, isProcessing, gameOver, dispatch]);
+    }, [qIndex, isProcessing, gameOver, dispatch, completeMiniGame]);
 
     // Timer logic and auto-selection
     useEffect(() => {
@@ -115,10 +122,8 @@ const PressBriefingGame = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [gameOver, isProcessing, currentQ.options, handleSelect]);
 
-    const timerBar = '[' + '█'.repeat(Math.ceil(timer * 4)) + '░'.repeat(20 - Math.ceil(timer * 4)) + ']';
-
     return (
-        <div className="h-full flex-col p-4 md:p-8 items-center justify-center">
+        <ScreenLayout center>
             <div className="w-full max-w-lg border-2 border-[var(--color-phosphor)] p-4 bg-black/80 relative">
                 <div className="text-xs font-bold uppercase tracking-widest text-center mb-4">
                     *** PRESS BRIEFING ***
@@ -175,13 +180,10 @@ const PressBriefingGame = () => {
             {statsGained && (
                 <CelebrationOverlay
                     statsGained={statsGained}
-                    onComplete={() => {
-                        setStatsGained(null);
-                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-                    }}
+                    onComplete={() => handleCelebrationComplete(SCREENS.EVENT)}
                 />
             )}
-        </div>
+        </ScreenLayout>
     );
 };
 

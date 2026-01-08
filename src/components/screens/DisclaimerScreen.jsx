@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { useGame } from '../../context/GameContext';
 import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
+import ScreenLayout from '../ScreenLayout';
 
 const DisclaimerScreen = () => {
     const { dispatch } = useGame();
@@ -29,8 +30,8 @@ const DisclaimerScreen = () => {
     }, [proceed]);
 
     return (
-        <div className="h-full flex flex-col items-center justify-center p-4">
-            <pre className="text-[var(--color-phosphor)] text-sm leading-relaxed whitespace-pre font-mono mb-8">
+        <ScreenLayout center>
+            <pre className="text-[var(--color-phosphor)] text-xs md:text-sm leading-relaxed whitespace-pre font-mono mb-8 scale-75 md:scale-100">
                 {`╔══════════════════════════════════════════════════════════╗
 ║                   LIBERATION TRAIL                        ║
 ║            "Spreading Democracy™ Since 1953"              ║
@@ -59,7 +60,7 @@ const DisclaimerScreen = () => {
             >
                 [ BEGIN LIBERATION ]
             </button>
-        </div>
+        </ScreenLayout>
     );
 };
 

@@ -158,17 +158,11 @@ const WarAssistant = () => {
         close();
     };
 
-    const close = () => {
+    const close = useCallback(() => {
         setVisible(false);
         setContent(null);
-    };
+    }, []);
 
-    const handleDisable = () => {
-        // Disabling the War Assistant adds cholera risk!
-        dispatch({ type: 'MODIFY_STATS', payload: { choleraRisk: 10 } });
-        playSound('error');
-        close();
-    };
 
     useEffect(() => {
         const handleGlobalClick = () => {

@@ -2,6 +2,7 @@ import { useGame } from '../../context/GameContext';
 import { COUNTRIES } from '../../utils/constants';
 import ChoiceMenu from '../ChoiceMenu';
 import Typewriter from '../Typewriter';
+import ScreenLayout from '../ScreenLayout';
 
 const CountrySelection = () => {
     const { dispatch } = useGame();
@@ -16,7 +17,7 @@ const CountrySelection = () => {
     }));
 
     return (
-        <div className="h-full flex-col p-4 md:p-8 items-center mt-8 md:mt-0">
+        <ScreenLayout center>
             <div className="border-[var(--color-phosphor)] border-2 p-3 mb-8 w-full text-center">
                 <h2 className="text-lg md:text-xl font-bold">
                     <span className="line-through opacity-50">ENRICH MYSELF</span> er... um, SPREAD DEMOCRACY
@@ -28,7 +29,7 @@ const CountrySelection = () => {
                 options={options}
                 onSelect={handleSelect}
             />
-        </div>
+        </ScreenLayout>
     );
 };
 

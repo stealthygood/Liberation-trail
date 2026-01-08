@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useGame } from '../../context/GameContext';
 import ASCIIArt from '../ASCIIArt';
 import Typewriter from '../Typewriter';
+import ScreenLayout from '../ScreenLayout';
 import { playSound } from '../../utils/SoundManager';
 
 const VICTORY_ART = `
@@ -60,31 +61,31 @@ const VictoryScreen = () => {
     }, [dispatch]);
 
     return (
-        <div className="h-full flex-col items-center justify-center p-8 text-center overflow-auto">
-            <ASCIIArt art={VICTORY_ART} className="mb-4 text-yellow-400" />
+        <ScreenLayout center>
+            <ASCIIArt art={VICTORY_ART} className="mb-2 text-yellow-400 scale-75 md:scale-100" />
 
-            <h1 className="text-4xl mb-4 text-yellow-400" style={{ textShadow: '0 0 10px gold' }}>
+            <h1 className="text-5xl md:text-8xl font-black mb-6 text-yellow-400 leading-tight italic uppercase tracking-tighter bg-black/40 px-4 py-2" style={{ textShadow: '0 0 50px gold' }}>
                 {ending.title}
             </h1>
 
-            <div className="border-2 border-[var(--color-phosphor)] p-6 max-w-2xl w-full mb-8 text-left bg-black/40">
-                <div className="mb-6 text-xl">
-                    <Typewriter text={ending.text} speed={25} />
+            <div className="border-4 border-double border-[var(--color-phosphor)] p-5 md:p-8 max-w-2xl w-full mb-8 text-left bg-black/80 shadow-[0_0_20px_rgba(51,255,51,0.2)]">
+                <div className="mb-6 text-xl md:text-2xl leading-relaxed text-[var(--color-phosphor)]">
+                    <Typewriter text={ending.text} speed={30} />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 text-xs font-mono uppercase border-t border-[var(--color-phosphor-dim)] pt-4">
-                    <div>
-                        <div className="opacity-50">MISSION PERFORMANCE:</div>
-                        <div>Oil Secured: {stats.oil}B</div>
-                        <div>Approval: {stats.approval}%</div>
-                        <div>Chaos Level: {stats.chaos}%</div>
-                        <div>War Crimes: {stats.warCrimes > 10 ? 'MAXIMUM' : stats.warCrimes}</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm font-mono uppercase border-t border-[var(--color-phosphor-dim)] pt-6">
+                    <div className="space-y-1">
+                        <div className="opacity-50 text-[10px] mb-2">--- MISSION PERFORMANCE ---</div>
+                        <div className="flex justify-between"><span>OIL SECURED:</span> <span className="text-green-400 font-bold">{stats.oil}B</span></div>
+                        <div className="flex justify-between"><span>APPROVAL:</span> <span className="text-blue-400 font-bold">{stats.approval}%</span></div>
+                        <div className="flex justify-between"><span>CHAOS LEVEL:</span> <span className="text-red-400 font-bold">{stats.chaos}%</span></div>
+                        <div className="flex justify-between"><span>WAR CRIMES:</span> <span className="text-yellow-600 font-bold">{stats.warCrimes > 12 ? 'MAXIMUM' : stats.warCrimes}</span></div>
                     </div>
-                    <div>
-                        <div className="opacity-50">PERSISTENT RECORD:</div>
-                        <div>Total Oil Liberated: {persistence.totalOilSecured + stats.oil}B</div>
-                        <div>High Score: {persistence.highScore}B</div>
-                        <div>Career Death Count: {persistence.choleraDeaths}</div>
+                    <div className="space-y-1">
+                        <div className="opacity-50 text-[10px] mb-2">--- PERSISTENT RECORD ---</div>
+                        <div className="flex justify-between"><span>TOTAL OIL:</span> <span className="text-green-500">{persistence.totalOilSecured + stats.oil}B</span></div>
+                        <div className="flex justify-between"><span>HIGH SCORE:</span> <span className="text-yellow-500 font-bold">{persistence.highScore}B</span></div>
+                        <div className="flex justify-between"><span>CAREER DEATHS:</span> <span className="text-red-500">{persistence.choleraDeaths}</span></div>
                     </div>
                 </div>
             </div>
@@ -112,7 +113,7 @@ const VictoryScreen = () => {
                     OR PRESS ANY KEY
                 </div>
             </div>
-        </div>
+        </ScreenLayout>
     );
 };
 

@@ -4,6 +4,8 @@ import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
 import CelebrationOverlay from '../CelebrationOverlay';
 import MiniGameIntro from '../MiniGameIntro';
+import ScreenLayout from '../ScreenLayout';
+import { useMiniGame } from '../../hooks/useMiniGame';
 
 const TARGET_TYPES = [
     { name: 'Insurgent Leader', confidence: 72, oil: 10, warCrimes: 1 },
@@ -18,8 +20,16 @@ const DroneStrikeGame = () => {
     const [target] = useState(TARGET_TYPES[0]);
     const [confidence, setConfidence] = useState(target.confidence);
     const [crosshairPos, setCrosshairPos] = useState({ x: 50, y: 50 });
-    const [gameOver, setGameOver] = useState(false);
     const [status, setStatus] = useState('SCANNING...');
+    const [gameOver, setGameOver] = useState(false);
+
+    const {
+        showIntro,
+        setShowIntro,
+        statsGained,
+        completeMiniGame,
+        handleCelebrationComplete
+    } = useMiniGame();
 
     // Refs for animation
     const requestRef = useRef();
@@ -35,14 +45,12 @@ const DroneStrikeGame = () => {
 
             if (impactSuccess) {
                 setStatus('TARGET NEUTRALIZED');
-                dispatch({
-                    type: 'MODIFY_STATS',
-                    payload: {
-                        oil: target.oil,
-                        warCrimes: target.warCrimes,
-                        approval: target.warCrimes > 4 ? -10 : 5
-                    }
-                });
+                const gains = {
+                    oil: target.oil,
+                    warCrimes: target.warCrimes,
+                    approval: target.warCrimes > 4 ? -10 : 5
+                };
+                completeMiniGame(gains);
             } else {
                 setStatus('COLLATERAL DAMAGE CONFIRMED');
                 dispatch({
@@ -52,13 +60,12 @@ const DroneStrikeGame = () => {
                         approval: -15
                     }
                 });
+                setTimeout(() => {
+                    dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+                }, 2000);
             }
-
-            setTimeout(() => {
-                dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-            }, 2000);
         }, 2000);
-    }, [confidence, target, dispatch]);
+    }, [confidence, target, dispatch, completeMiniGame]);
 
     const handleAbort = useCallback(() => {
         setGameOver(true);
@@ -118,7 +125,7 @@ const DroneStrikeGame = () => {
     }, [gameOver]);
 
     return (
-        <div className="h-full flex-col p-4 items-center justify-center font-mono">
+        <ScreenLayout center className="font-mono">
             <h2 className="text-xl mb-4 text-red-500 animate-pulse text-center">*** PREDATOR FEED - CLASSIFIED ***</h2>
 
             <div className="relative border-2 border-[var(--color-phosphor)] w-full max-w-[600px] aspect-video bg-black overflow-hidden bg-[radial-gradient(circle,rgba(0,50,0,0.4)_0%,rgba(0,0,0,1)_100%)]">
@@ -192,13 +199,10 @@ const DroneStrikeGame = () => {
             {statsGained && (
                 <CelebrationOverlay
                     statsGained={statsGained}
-                    onComplete={() => {
-                        setStatsGained(null);
-                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-                    }}
+                    onComplete={() => handleCelebrationComplete(SCREENS.EVENT)}
                 />
             )}
-        </div>
+        </ScreenLayout>
     );
 };
 

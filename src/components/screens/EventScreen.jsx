@@ -1,10 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useGame } from '../../context/GameContext';
 import ChoiceMenu from '../ChoiceMenu';
 import Typewriter from '../Typewriter';
 import { SCREENS } from '../../utils/constants';
-import { playSound } from '../../utils/SoundManager';
 import CelebrationOverlay from '../CelebrationOverlay';
+import ScreenLayout from '../ScreenLayout';
+import { useEventProcessor } from '../../hooks/useEventProcessor';
 
 const EVENTS = [
     {
@@ -144,105 +145,43 @@ const EVENTS = [
     }
 ];
 
-const checkCholeraDeathRoll = (choleraRisk) => {
-    if (choleraRisk >= 100) return true;
-    if (choleraRisk <= 0) return false;
-    return Math.random() * 100 < choleraRisk;
-};
-
 const EventScreen = () => {
-    const { state, dispatch } = useGame();
-    // Use functional initializer to pick event once on mount safely
-    const [event] = useState(() => {
-        return EVENTS[Math.floor(Math.random() * EVENTS.length)];
-    });
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [statsGained, setStatsGained] = useState(null);
-
-    const handleSelect = useCallback((optionId) => {
-        if (isProcessing) return;
-        setIsProcessing(true);
-
-        const selectedOption = event.options.find(opt => opt.id === optionId);
-        if (!selectedOption) return;
-
-        // Apply stat effects
-        if (selectedOption.effects) {
-            dispatch({ type: 'MODIFY_STATS', payload: selectedOption.effects });
-        }
-
-        // Timeline progression: Every 3 events (eventCount) increases the month
-        if ((state.stats.eventCount + 1) % 3 === 0) {
-            dispatch({ type: 'MODIFY_STATS', payload: { month: 1 } });
-        }
-
-        // Log to history
-        dispatch({
-            type: 'ADD_HISTORY',
-            payload: {
-                event: event.title,
-                choice: optionId,
-                effects: selectedOption.effects
-            }
-        });
-
-        const newCholeraRisk = state.stats.choleraRisk + (selectedOption.effects?.choleraRisk || 0);
-        const newChaos = state.stats.chaos + (selectedOption.effects?.chaos || 0);
-
-        // Ethical death check
-        if (selectedOption.isEthical && checkCholeraDeathRoll(newCholeraRisk)) {
-            playSound('error');
-            dispatch({ type: 'NAVIGATE', payload: SCREENS.DEATH });
-            return;
-        }
-
-        // Navigation logic:
-        let nextScreen = SCREENS.EVENT;
-        const randomRoll = Math.random() * 100;
-
-        if (selectedOption.miniGame) {
-            nextScreen = selectedOption.miniGame;
-        } else if (randomRoll < (10 + newChaos * 0.5)) { // Chaos-driven pop-ups
-            nextScreen = SCREENS.RANDOM_EVENT;
-        } else if (randomRoll < 40) {
-            const games = [SCREENS.REDACTION, SCREENS.PRESS_BRIEFING, SCREENS.DRONE_STRIKE, SCREENS.SUPER_PAC, SCREENS.SANCTIONS];
-            nextScreen = games[Math.floor(Math.random() * games.length)];
-        }
-
-        // Check for victory condition (oil >= 100)
-        const newOil = state.stats.oil + (selectedOption.effects?.oil || 0);
-
-        // Trigger celebration for profitable choices
-        const isProfitable = (selectedOption.effects?.oil > 0 || selectedOption.effects?.treasury > 0) && !selectedOption.isEthical;
-
-        if (isProfitable) {
-            setStatsGained(selectedOption.effects);
-            // We'll navigate after celebration completes
-            return;
-        }
-
-        if (newOil >= 100) {
-            playSound('success');
-            setTimeout(() => {
-                dispatch({ type: 'NAVIGATE', payload: SCREENS.VICTORY });
-            }, 300);
-            return;
-        }
-
-        playSound('success');
-        setTimeout(() => {
-            dispatch({ type: 'NAVIGATE', payload: nextScreen });
-            // Reset isProcessing in case we stay on this screen or return quickly
-            setIsProcessing(false);
-        }, 300);
-    }, [event, dispatch, state.stats, isProcessing]);
-
+    const { state } = useGame();
+    const [event] = useState(() => EVENTS[Math.floor(Math.random() * EVENTS.length)]);
     const [typingFinished, setTypingFinished] = useState(false);
 
+    const {
+        isProcessing,
+        statsGained,
+        processChoice,
+        completeCelebration
+    } = useEventProcessor();
+
+    const handleSelect = (optionId) => {
+        const selectedOption = event.options.find(opt => opt.id === optionId);
+        if (selectedOption) processChoice(selectedOption, event.title);
+    };
+
+    const handleCelebrationComplete = () => {
+        completeCelebration(() => {
+            const selectedOption = event.options.find(opt => opt.effects === statsGained);
+            const randomRoll = Math.random() * 100;
+            const newChaos = state.stats.chaos + (statsGained.chaos || 0);
+
+            if (selectedOption?.miniGame) return selectedOption.miniGame;
+            if (randomRoll < (10 + newChaos * 0.5)) return SCREENS.RANDOM_EVENT;
+            if (randomRoll < 40) {
+                const games = [SCREENS.REDACTION, SCREENS.PRESS_BRIEFING, SCREENS.DRONE_STRIKE, SCREENS.SUPER_PAC, SCREENS.SANCTIONS];
+                return games[Math.floor(Math.random() * games.length)];
+            }
+            return SCREENS.EVENT;
+        });
+    };
+
     return (
-        <div className="h-full flex-col p-4 md:p-8">
+        <ScreenLayout>
             <div className="border-[var(--color-phosphor)] border-2 p-3 mb-4 bg-black/40">
-                <h2 className="text-lg md:text-xl font-bold">{event.title}</h2>
+                <h2 className="text-lg md:text-xl font-bold uppercase">{event.title}</h2>
             </div>
 
             <div className="mb-4 min-h-[60px] border-l-2 border-[var(--color-phosphor-dim)] pl-4">
@@ -266,34 +205,10 @@ const EventScreen = () => {
             {statsGained && (
                 <CelebrationOverlay
                     statsGained={statsGained}
-                    onComplete={() => {
-                        setStatsGained(null);
-                        const newOil = state.stats.oil + (statsGained.oil || 0);
-                        if (newOil >= 100) {
-                            dispatch({ type: 'NAVIGATE', payload: SCREENS.VICTORY });
-                        } else {
-                            // Determine next screen (logic copied from handleSelect)
-                            const randomRoll = Math.random() * 100;
-                            const newChaos = state.stats.chaos + (statsGained.chaos || 0);
-                            const selectedOption = event.options.find(opt => opt.effects === statsGained);
-
-                            let targetScreen = SCREENS.EVENT;
-                            if (selectedOption?.miniGame) {
-                                targetScreen = selectedOption.miniGame;
-                            } else if (randomRoll < (10 + newChaos * 0.5)) {
-                                targetScreen = SCREENS.RANDOM_EVENT;
-                            } else if (randomRoll < 40) {
-                                const games = [SCREENS.REDACTION, SCREENS.PRESS_BRIEFING, SCREENS.DRONE_STRIKE, SCREENS.SUPER_PAC, SCREENS.SANCTIONS];
-                                targetScreen = games[Math.floor(Math.random() * games.length)];
-                            }
-
-                            dispatch({ type: 'NAVIGATE', payload: targetScreen });
-                        }
-                        setIsProcessing(false);
-                    }}
+                    onComplete={handleCelebrationComplete}
                 />
             )}
-        </div>
+        </ScreenLayout>
     );
 };
 

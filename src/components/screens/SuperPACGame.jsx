@@ -4,6 +4,8 @@ import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
 import CelebrationOverlay from '../CelebrationOverlay';
 import MiniGameIntro from '../MiniGameIntro';
+import ScreenLayout from '../ScreenLayout';
+import { useMiniGame } from '../../hooks/useMiniGame';
 
 const SHELL_COMPANIES = [
     { id: 'FREEDOM_PAC', name: 'Americans for Freedom PAC', trace: 0, description: "Highly opaque. No disclosure required." },
@@ -18,8 +20,14 @@ const SuperPACGame = () => {
     const [moneyRouted, setMoneyRouted] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [status, setStatus] = useState("READY TO LAUNDER");
-    const [showIntro, setShowIntro] = useState(true);
-    const [statsGained, setStatsGained] = useState(null);
+
+    const {
+        showIntro,
+        setShowIntro,
+        statsGained,
+        completeMiniGame,
+        handleCelebrationComplete
+    } = useMiniGame();
 
     const totalToRoute = 5.0; // $5M
 
@@ -27,7 +35,7 @@ const SuperPACGame = () => {
         if (gameOver) return;
         playSound('type');
 
-        const amount = 1.0; // Route $1M at a time
+        const amount = 1.0;
         const newMoney = moneyRouted + amount;
         const newSuspicion = suspicion + company.trace;
 
@@ -60,18 +68,17 @@ const SuperPACGame = () => {
             setStatus("FUNDS SUCCESSFULLY SECURED");
             playSound('success');
             setGameOver(true);
-            const effects = { treasury: 10, approval: 5, fifaPrize: true };
-            dispatch({ type: 'MODIFY_STATS', payload: { treasury: 5, approval: 5 } }); // Keeping original balance but adding prize
-            setStatsGained(effects);
+            const effects = { treasury: 10, approval: 5 };
+            completeMiniGame(effects);
         } else {
             setStatus(`ROUTED $${newMoney.toFixed(1)}M...`);
         }
-    }, [moneyRouted, suspicion, gameOver, dispatch]);
+    }, [moneyRouted, suspicion, gameOver, dispatch, completeMiniGame]);
 
     // Keyboard support
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (gameOver) return;
+            if (gameOver || showIntro) return;
             const num = parseInt(e.key);
             if (!isNaN(num) && num >= 1 && num <= SHELL_COMPANIES.length) {
                 handleRoute(SHELL_COMPANIES[num - 1]);
@@ -79,15 +86,10 @@ const SuperPACGame = () => {
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [gameOver, handleRoute]);
-
-    const renderProgressBar = (value, length = 20) => {
-        const filled = Math.min(length, Math.ceil((value / 100) * length));
-        return '[' + '█'.repeat(filled) + '░'.repeat(length - filled) + ']';
-    };
+    }, [gameOver, handleRoute, showIntro]);
 
     return (
-        <div className="h-full flex-col p-4 md:p-8 items-center justify-center font-mono">
+        <ScreenLayout center className="font-mono">
             <h2 className="text-xl mb-6 text-[var(--color-phosphor)] font-bold text-center tracking-tighter uppercase">*** FINANCE SHUFFLE ***</h2>
 
             <div className="w-full max-w-md border-2 border-[var(--color-phosphor)] p-4 bg-black/80">
@@ -143,6 +145,7 @@ const SuperPACGame = () => {
 |________________| /
 `}
             </pre>
+
             {showIntro && (
                 <MiniGameIntro
                     title="THE FINANCE SHUFFLE"
@@ -155,13 +158,10 @@ const SuperPACGame = () => {
             {statsGained && (
                 <CelebrationOverlay
                     statsGained={statsGained}
-                    onComplete={() => {
-                        setStatsGained(null);
-                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-                    }}
+                    onComplete={() => handleCelebrationComplete(SCREENS.EVENT)}
                 />
             )}
-        </div>
+        </ScreenLayout>
     );
 };
 

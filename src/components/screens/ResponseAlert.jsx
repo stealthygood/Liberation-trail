@@ -5,6 +5,31 @@ import Typewriter from '../Typewriter';
 import { SCREENS, COUNTRIES } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
 import CelebrationOverlay from '../CelebrationOverlay';
+import ScreenLayout from '../ScreenLayout';
+
+const OPTIONS = [
+    {
+        id: 'KIDNAP',
+        name: 'KIDNAP PRESIDENT',
+        description: 'Extract him via unregistered aircraft.',
+        effects: { oil: 20, treasury: 10, warCrimes: 5 },
+        miniGame: SCREENS.DRONE_STRIKE
+    },
+    {
+        id: 'MEDDLE',
+        name: 'MEDDLE IN ELECTIONS',
+        description: 'Inject $50M into opposition candidates.',
+        effects: { oil: 10, treasury: -5, approval: 10 },
+        miniGame: SCREENS.SUPER_PAC
+    },
+    {
+        id: 'CLEAN_ENERGY',
+        name: 'INVEST IN DOMESTIC CLEAN ENERGY',
+        description: 'Reduce dependency on foreign oil. (Ethical/Unprofitable)',
+        effects: { choleraRisk: 50, approval: -20, oil: -10 },
+        isEthical: true
+    }
+];
 
 const ResponseAlert = () => {
     const { state, dispatch } = useGame();
@@ -14,35 +39,11 @@ const ResponseAlert = () => {
 
     const countryData = COUNTRIES.find(c => c.id === selectedCountry) || COUNTRIES[0];
 
-    const options = [
-        {
-            id: 'KIDNAP',
-            name: 'KIDNAP PRESIDENT',
-            description: 'Extract him via unregistered aircraft.',
-            effects: { oil: 20, treasury: 10, warCrimes: 5 },
-            miniGame: SCREENS.DRONE_STRIKE
-        },
-        {
-            id: 'MEDDLE',
-            name: 'MEDDLE IN ELECTIONS',
-            description: 'Inject $50M into opposition candidates.',
-            effects: { oil: 10, treasury: -5, approval: 10 },
-            miniGame: SCREENS.SUPER_PAC
-        },
-        {
-            id: 'CLEAN_ENERGY',
-            name: 'INVEST IN DOMESTIC CLEAN ENERGY',
-            description: 'Reduce dependency on foreign oil. (Ethical/Unprofitable)',
-            effects: { choleraRisk: 50, approval: -20, oil: -10 },
-            isEthical: true
-        }
-    ];
-
     const handleSelect = useCallback((optionId) => {
         if (isProcessing) return;
         setIsProcessing(true);
 
-        const selectedOption = options.find(opt => opt.id === optionId);
+        const selectedOption = OPTIONS.find(opt => opt.id === optionId);
 
         // Apply stat effects
         if (selectedOption.effects) {
@@ -74,10 +75,10 @@ const ResponseAlert = () => {
 
         playSound('success');
         dispatch({ type: 'NAVIGATE', payload: selectedOption.miniGame || SCREENS.EVENT });
-    }, [dispatch, isProcessing, options]);
+    }, [dispatch, isProcessing]);
 
     return (
-        <div className="h-full flex-col p-8 lg:p-12">
+        <ScreenLayout>
             <div className="border-2 border-red-500 text-red-500 p-4 mb-6 animate-pulse text-center">
                 <h2 className="text-2xl font-bold">*** ALERT *** ALERT *** ALERT ***</h2>
             </div>
@@ -100,7 +101,7 @@ const ResponseAlert = () => {
             </h3>
 
             <ChoiceMenu
-                options={options}
+                options={OPTIONS}
                 onSelect={handleSelect}
                 disabled={isProcessing}
             />
@@ -110,12 +111,13 @@ const ResponseAlert = () => {
                     statsGained={statsGained}
                     onComplete={() => {
                         setStatsGained(null);
-                        const selectedOption = options.find(opt => opt.effects === statsGained);
-                        dispatch({ type: 'NAVIGATE', payload: selectedOption.miniGame || SCREENS.EVENT });
+                        // Find the option by comparing the effects values since reference might change if we didn't use memo
+                        const selectedOption = OPTIONS.find(opt => opt.effects.oil === statsGained.oil && opt.effects.treasury === statsGained.treasury);
+                        dispatch({ type: 'NAVIGATE', payload: selectedOption?.miniGame || SCREENS.EVENT });
                     }}
                 />
             )}
-        </div>
+        </ScreenLayout>
     );
 };
 

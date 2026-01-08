@@ -2,6 +2,7 @@ import { useGame } from '../../context/GameContext';
 import { ROLES } from '../../utils/constants';
 import ChoiceMenu from '../ChoiceMenu';
 import Typewriter from '../Typewriter';
+import ScreenLayout from '../ScreenLayout';
 
 const RoleSelection = () => {
     const { dispatch } = useGame();
@@ -12,7 +13,7 @@ const RoleSelection = () => {
     };
 
     return (
-        <div className="h-full flex-col p-6 items-center">
+        <ScreenLayout center>
             <h1 className="text-center text-3xl mb-2 tracking-tighter">LIBERATION TRAIL</h1>
             <div className="w-16 h-1 bg-[var(--color-phosphor)] mb-8 opacity-30"></div>
 
@@ -28,7 +29,7 @@ const RoleSelection = () => {
                 options={ROLES}
                 onSelect={handleSelect}
             />
-        </div>
+        </ScreenLayout>
     );
 };
 

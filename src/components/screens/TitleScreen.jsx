@@ -3,6 +3,7 @@ import ASCIIArt from '../ASCIIArt';
 import Typewriter from '../Typewriter';
 import { useGame } from '../../context/GameContext';
 import { playSound } from '../../utils/SoundManager';
+import ScreenLayout from '../ScreenLayout';
 
 const TITLE_ART = `
 ╔════════════════════════════════════════════════════════════╗
@@ -39,7 +40,7 @@ const TitleScreen = () => {
     }, [dispatch]);
 
     return (
-        <div className="flex-col items-center justify-center h-full w-full">
+        <ScreenLayout center>
             <ASCIIArt art={TITLE_ART} />
 
             <div className="mt-8 text-center">
@@ -56,7 +57,7 @@ const TitleScreen = () => {
                     OR PRESS ANY KEY
                 </div>
             </div>
-        </div>
+        </ScreenLayout>
     );
 };
 
