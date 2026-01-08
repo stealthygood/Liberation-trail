@@ -64,7 +64,7 @@ const VictoryScreen = () => {
         <ScreenLayout center>
             <ASCIIArt art={VICTORY_ART} className="mb-2 text-yellow-400 scale-75 md:scale-100" />
 
-            <h1 className="text-5xl md:text-8xl font-black mb-6 text-yellow-400 leading-tight italic uppercase tracking-tighter bg-black/40 px-4 py-2" style={{ textShadow: '0 0 50px gold' }}>
+            <h1 className="text-4xl md:text-7xl font-black mb-6 text-yellow-400 leading-tight italic uppercase tracking-tighter bg-black/40 px-4 py-2" style={{ textShadow: '0 0 40px gold' }}>
                 {ending.title}
             </h1>
 

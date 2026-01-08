@@ -55,7 +55,7 @@ const CelebrationOverlay = ({ statsGained, onComplete }) => {
             </div>
 
             <div className="relative z-10 p-8 md:p-12 border-4 border-double border-[var(--color-phosphor)] bg-black shadow-[0_0_80px_rgba(51,255,51,0.6)] text-center max-w-[95vw] md:max-w-2xl animate-in zoom-in duration-300">
-                <h1 className="text-4xl md:text-7xl font-black mb-6 neon-text-pulse tracking-tighter italic uppercase bg-black/60 px-6 py-3 border-y-2 border-[var(--color-phosphor)]" style={{ textShadow: '0 0 40px var(--color-phosphor)' }}>
+                <h1 className="text-3xl md:text-6xl font-black mb-4 neon-text-pulse tracking-tighter italic uppercase bg-black/80 px-4 py-3 border-y-2 border-[var(--color-phosphor)]" style={{ textShadow: '0 0 30px var(--color-phosphor)' }}>
                     {message}
                 </h1>
 
