@@ -91,12 +91,16 @@ const RandomEventScreen = () => {
                     <Typewriter text={event.text} speed={20} />
                 </div>
 
+                <div className="mb-4 text-xs font-bold opacity-70 tracking-widest text-center uppercase">
+                    WHAT DO YOU DO?
+                </div>
+
                 <div className="flex-col gap-3">
                     {event.options.map((opt, i) => (
                         <button
                             key={i}
                             onClick={() => handleSelect(opt)}
-                            className="w-full text-center border-2 border-current p-4 hover:bg-white/10 transition-all font-bold text-lg uppercase"
+                            className="w-full text-center border-2 border-current p-4 hover:bg-white/10 transition-all font-bold text-lg uppercase mb-3"
                         >
                             [ {opt.text} ]
                         </button>

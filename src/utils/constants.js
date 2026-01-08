@@ -46,18 +46,6 @@ export const COUNTRIES = [
         democracyScore: 'Needs Liberation'
     },
     {
-        id: 'IRAN',
-        name: 'IRAN',
-        reserves: '208B',
-        democracyScore: 'Regime Change Pending'
-    },
-    {
-        id: 'LIBYA',
-        name: 'LIBYA',
-        reserves: '48B',
-        democracyScore: 'Successfully Liberated (2011)'
-    },
-    {
         id: 'IRAQ',
         name: 'IRAQ',
         reserves: '145B',

@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useGame } from '../../context/GameContext';
 import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
+import CelebrationOverlay from '../CelebrationOverlay';
+import MiniGameIntro from '../MiniGameIntro';
 
 const TARGET_TYPES = [
     { name: 'Insurgent Leader', confidence: 72, oil: 10, warCrimes: 1 },
@@ -178,6 +180,24 @@ const DroneStrikeGame = () => {
                     animation: blink 0.5s infinite;
                 }
             `}</style>
+            {showIntro && (
+                <MiniGameIntro
+                    title="OPERATION: FREEDOM RAIN"
+                    description="Unidentified targets detected. Some may be insurgents, others may be participants in local social gatherings. High-altitude precision is required to minimize civilian... awareness."
+                    instruction="TAP [ENGAGE TARGET] WHEN CONFIDENCE IS HIGH. AVOID ABORTING MISSION IF POSSIBLE."
+                    onComplete={() => setShowIntro(false)}
+                />
+            )}
+
+            {statsGained && (
+                <CelebrationOverlay
+                    statsGained={statsGained}
+                    onComplete={() => {
+                        setStatsGained(null);
+                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+                    }}
+                />
+            )}
         </div>
     );
 };

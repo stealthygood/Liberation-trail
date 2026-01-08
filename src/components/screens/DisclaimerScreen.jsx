@@ -8,7 +8,7 @@ const DisclaimerScreen = () => {
 
     const proceed = useCallback(() => {
         playSound('type');
-        dispatch({ type: 'NAVIGATE', payload: SCREENS.TITLE });
+        dispatch({ type: 'NAVIGATE', payload: SCREENS.COUNTRY_SELECT });
     }, [dispatch]);
 
     useEffect(() => {
@@ -46,23 +46,15 @@ const DisclaimerScreen = () => {
 ║  Make the ETHICAL choices and... well...                ║
 ║                                                          ║
 ║  Let's just say cholera is endemic in Washington.       ║
-║                                                          ║
-║  CONTROLS:                                               ║
-║  • Tap options or use Arrow keys/Numbers                 ║
-║  • Tap buttons OR use SPACE/ENTER                        ║
-║  • Avoid ethical decisions at all costs                 ║
 ╚══════════════════════════════════════════════════════════╝`}
             </pre>
 
             <button
                 onClick={proceed}
-                className="text-2xl px-12 py-4 animate-pulse"
+                className="text-2xl px-12 py-4 animate-pulse mt-8"
             >
                 [ BEGIN LIBERATION ]
             </button>
-            <div className="mt-4 text-xs opacity-50">
-                OR PRESS ENTER
-            </div>
         </div>
     );
 };

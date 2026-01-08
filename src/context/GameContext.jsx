@@ -38,15 +38,13 @@ const gameReducer = (state, action) => {
             return { ...state, persistence: { ...state.persistence, ...action.payload } };
         case 'TOGGLE_SOUND':
             return { ...state, soundEnabled: !state.soundEnabled };
-        case 'START_GAME': {
-            const defaultState = getDefaultState();
             return {
                 ...defaultState,
                 persistence: state.persistence,
                 soundEnabled: state.soundEnabled,
-                currentScreen: SCREENS.ROLE_SELECT
+                currentScreen: SCREENS.COUNTRY_SELECT,
+                showStatusBar: true
             };
-        }
         case 'SELECT_ROLE':
             return {
                 ...state,

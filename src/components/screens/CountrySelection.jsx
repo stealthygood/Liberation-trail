@@ -18,17 +18,12 @@ const CountrySelection = () => {
 
     return (
         <div className="h-full flex-col p-4 md:p-8 items-center">
-            <div className="border-[var(--color-phosphor)] border-2 p-3 mb-4 w-full text-center">
-                <h2 className="text-lg md:text-xl font-bold">STRATEGIC ANALYSIS COMPLETE</h2>
+            <div className="border-[var(--color-phosphor)] border-2 p-3 mb-8 w-full text-center">
+                <h2 className="text-lg md:text-xl font-bold">
+                    <span className="line-through opacity-50">ENRICH MYSELF</span> er... um, SPREAD DEMOCRACY
+                </h2>
             </div>
 
-            <div className="mb-4 min-h-[40px] text-center">
-                <Typewriter
-                    text="SELECT TARGET NATION:"
-                    speed={20}
-                    className="text-xl italic opacity-80"
-                />
-            </div>
 
             <ChoiceMenu
                 options={options}

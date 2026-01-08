@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect } from 'react';
 import { useGame } from '../../context/GameContext';
 import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
+import CelebrationOverlay from '../CelebrationOverlay';
+import MiniGameIntro from '../MiniGameIntro';
 
 const SHELL_COMPANIES = [
     { id: 'FREEDOM_PAC', name: 'Americans for Freedom PAC', trace: 0, description: "Highly opaque. No disclosure required." },
@@ -16,6 +18,8 @@ const SuperPACGame = () => {
     const [moneyRouted, setMoneyRouted] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [status, setStatus] = useState("READY TO LAUNDER");
+    const [showIntro, setShowIntro] = useState(true);
+    const [statsGained, setStatsGained] = useState(null);
 
     const totalToRoute = 5.0; // $5M
 
@@ -56,10 +60,9 @@ const SuperPACGame = () => {
             setStatus("FUNDS SUCCESSFULLY SECURED");
             playSound('success');
             setGameOver(true);
-            setTimeout(() => {
-                dispatch({ type: 'MODIFY_STATS', payload: { treasury: 5, approval: 5 } });
-                dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-            }, 1500);
+            const effects = { treasury: 10, approval: 5, fifaPrize: true };
+            dispatch({ type: 'MODIFY_STATS', payload: { treasury: 5, approval: 5 } }); // Keeping original balance but adding prize
+            setStatsGained(effects);
         } else {
             setStatus(`ROUTED $${newMoney.toFixed(1)}M...`);
         }
@@ -140,6 +143,24 @@ const SuperPACGame = () => {
 |________________| /
 `}
             </pre>
+            {showIntro && (
+                <MiniGameIntro
+                    title="THE FINANCE SHUFFLE"
+                    description="Donations are the lifeblood of freedom. Route these generous contributions through our web of shell companies to ensure maximum... privacy."
+                    instruction="TAP SHELL COMPANIES TO ROUTE FUNDS. KEEP SUSPICION BELOW 100%."
+                    onComplete={() => setShowIntro(false)}
+                />
+            )}
+
+            {statsGained && (
+                <CelebrationOverlay
+                    statsGained={statsGained}
+                    onComplete={() => {
+                        setStatsGained(null);
+                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+                    }}
+                />
+            )}
         </div>
     );
 };

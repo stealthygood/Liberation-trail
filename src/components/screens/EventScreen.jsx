@@ -8,29 +8,110 @@ import CelebrationOverlay from '../CelebrationOverlay';
 
 const EVENTS = [
     {
-        title: '*** INCOMING FUNDS ***',
-        text: 'PetroGlobal CEO Blackwell offers $5M for "favorable consideration" on drilling laws.',
+        id: 'VENEZUELA_START',
+        title: '*** LIBERATION ALERT: VENEZUELA ***',
+        text: 'President Maduro stated: "Mi Oil, no es su Oil." This blatant disregard for American energy security cannot stand.',
         options: [
             {
-                id: 'TRANSPARENCY',
-                name: 'TRANSPARENCY',
-                description: 'Refuse quid pro quo. (Unprofitable)',
-                effects: { approval: -5, choleraRisk: 25, chaos: -5 },
+                id: 'KIDNAP',
+                name: 'KIDNAP PRESIDENT',
+                description: 'Extract him via unregistered aircraft.',
+                effects: { oil: 20, treasury: 10, warCrimes: 5 },
+                miniGame: SCREENS.DRONE_STRIKE
+            },
+            {
+                id: 'MEDDLE',
+                name: 'MEDDLE IN ELECTIONS',
+                description: 'Inject $50M into opposition candidates.',
+                effects: { oil: 10, treasury: -5, approval: 10 },
+                miniGame: SCREENS.SUPER_PAC
+            },
+            {
+                id: 'CLEAN_ENERGY',
+                name: 'INVEST IN DOMESTIC CLEAN ENERGY',
+                description: 'Reduce dependency on foreign oil. (Ethical/Unprofitable)',
+                effects: { choleraRisk: 50, approval: -20, oil: -10 },
                 isEthical: true
+            }
+        ]
+    },
+    {
+        title: '*** PIPELINE OBSTRUCTION ***',
+        text: 'Eco-terrorists (unpaid students) are protesting the new "Freedom Flow" pipeline through a nature preserve.',
+        options: [
+            {
+                id: 'REDACT',
+                name: 'REDACT THE PROTEST',
+                description: 'Ensure no media coverage of "unauthorized gatherings".',
+                effects: { oil: 15, warCrimes: 2, approval: 5 },
+                miniGame: SCREENS.REDACTION
             },
             {
-                id: 'ACCEPT',
-                name: 'ACCEPT',
-                description: 'Route through shell corporations.',
-                effects: { treasury: 5, oil: 5, warCrimes: 1, approval: 3 },
+                id: 'LOBBY',
+                name: 'LOBBY CONGRESS',
+                description: 'Reclassify the preserve as a "Strategic Energy Zone".',
+                effects: { oil: 10, treasury: -10, approval: 5 },
                 miniGame: SCREENS.SUPER_PAC
             },
             {
-                id: 'EXTORT',
-                name: 'EXTORT',
-                description: '"That\'s it? Give me more."',
-                effects: { treasury: 15, warCrimes: 2, approval: -5, chaos: 10 },
+                id: 'CANCEL',
+                name: 'CANCEL PIPELINE',
+                description: 'Respect the trees. (Unprofitable)',
+                effects: { choleraRisk: 30, oil: -20, approval: -5 },
+                isEthical: true
+            }
+        ]
+    },
+    {
+        title: '*** CYBER THREAT ***',
+        text: 'Foreign hackers are mocking your hair online. Strategic Command advises kinetic response.',
+        options: [
+            {
+                id: 'STRIKE',
+                name: 'DRONE STRIKE',
+                description: 'Bomb their data center.',
+                effects: { oil: 10, warCrimes: 3, approval: 5, chaos: 20 },
+                miniGame: SCREENS.DRONE_STRIKE
+            },
+            {
+                id: 'DANK_MEMES',
+                name: 'MEME SQUAD',
+                description: 'Allocate $50B to Operation Dank Meme.',
+                effects: { treasury: -50, approval: 20, warCrimes: 1, chaos: 5 }
+            },
+            {
+                id: 'IGNORE',
+                name: 'IGNORE',
+                description: 'Focus on domestic policy.',
+                effects: { approval: -5, choleraRisk: 15, chaos: -5 },
+                isEthical: true
+            }
+        ]
+    },
+    {
+        title: '*** OIL FIELD DISPUTE ***',
+        text: 'Global Petroleum Corp requests a "security adjustment" to handle local union organizers.',
+        options: [
+            {
+                id: 'COUP',
+                name: 'AUTHORIZE COUP',
+                description: 'Install a business-friendly General.',
+                effects: { oil: 15, treasury: 10, warCrimes: 3, approval: -10, chaos: 30 },
+                miniGame: SCREENS.DRONE_STRIKE
+            },
+            {
+                id: 'BRIBE',
+                name: 'BRIBE UNIONS',
+                description: 'Standard operating procedure.',
+                effects: { oil: 10, treasury: -20, approval: 5 },
                 miniGame: SCREENS.SUPER_PAC
+            },
+            {
+                id: 'WORKERS',
+                name: 'WORKERS RIGHTS',
+                description: 'Support international labor laws. (Unprofitable)',
+                effects: { approval: 5, choleraRisk: 25, chaos: -15 },
+                isEthical: true
             }
         ]
     },
@@ -38,14 +119,6 @@ const EVENTS = [
         title: '*** MEDIA ALERT ***',
         text: 'Press Corp asking: "Why protect oil fields with troops?"',
         options: [
-            {
-                id: 'TRUTH',
-                name: 'TRUTH',
-                description: 'Explain the situation. (Lethal)',
-                effects: { approval: -20, choleraRisk: 30, chaos: -10 },
-                isEthical: true,
-                miniGame: SCREENS.PRESS_BRIEFING
-            },
             {
                 id: 'SECURITY',
                 name: 'NATIONAL SECURITY',
@@ -59,84 +132,14 @@ const EVENTS = [
                 description: '"Fake news! Traitors!"',
                 effects: { approval: 15, warCrimes: 1, chaos: 15 },
                 miniGame: SCREENS.PRESS_BRIEFING
-            }
-        ]
-    },
-    {
-        title: '*** CYBER THREAT ***',
-        text: 'Foreign hackers are mocking your hair online. Strategic Command advises kinetic response.',
-        options: [
-            {
-                id: 'IGNORE',
-                name: 'IGNORE',
-                description: 'Focus on domestic policy.',
-                effects: { approval: -5, choleraRisk: 15, chaos: -5 },
-                isEthical: true
             },
             {
-                id: 'STRIKE',
-                name: 'DRONE STRIKE',
-                description: 'Bomb their data center.',
-                effects: { oil: 10, warCrimes: 3, approval: 5, chaos: 20 },
-                miniGame: SCREENS.DRONE_STRIKE
-            },
-            {
-                id: 'DANK_MEMES',
-                name: 'MEME SQUAD',
-                description: 'Allocate $50B to Operation Dank Meme.',
-                effects: { treasury: -50, approval: 20, warCrimes: 1, chaos: 5 }
-            }
-        ]
-    },
-    {
-        title: '*** CORPORATE DISPUTE ***',
-        text: 'Global Bananas Corp requests a "regime adjustment" to lower minimum wage.',
-        options: [
-            {
-                id: 'WORKERS',
-                name: 'WORKERS RIGHTS',
-                description: 'Support international labor laws.',
-                effects: { approval: 5, choleraRisk: 25, chaos: -15 },
-                isEthical: true
-            },
-            {
-                id: 'COUP',
-                name: 'AUTHORIZE COUP',
-                description: 'Install a business-friendly General.',
-                effects: { oil: 15, treasury: 10, warCrimes: 3, approval: -10, chaos: 30 },
-                miniGame: SCREENS.DRONE_STRIKE
-            },
-            {
-                id: 'POTASSIUM',
-                name: 'POTASSIUM',
-                description: 'Eat a banana. Do nothing.',
-                effects: { approval: 0, choleraRisk: 5, chaos: 5 }
-            }
-        ]
-    },
-    {
-        title: '*** RESOURCE DISCOVERY ***',
-        text: 'Lithium deposits found under sacred site. Natives refuse to leave.',
-        options: [
-            {
-                id: 'PROTECT',
-                name: 'PROTECT SITE',
-                description: 'Abandon the lithium.',
-                effects: { approval: 10, choleraRisk: 35, chaos: -20 },
-                isEthical: true
-            },
-            {
-                id: 'OFFER',
-                name: 'OFFER PITTANCE',
-                description: 'Give them 0.01% of profits.',
-                effects: { oil: 10, treasury: 5, warCrimes: 1, chaos: 10 }
-            },
-            {
-                id: 'GAS',
-                name: 'FREEDOM GAS',
-                description: 'Relocate with non-lethal chemicals.',
-                effects: { oil: 25, warCrimes: 4, approval: -15, chaos: 40 },
-                miniGame: SCREENS.DRONE_STRIKE
+                id: 'TRUTH',
+                name: 'TRUTH',
+                description: 'Explain the situation. (Lethal)',
+                effects: { approval: -20, choleraRisk: 30, chaos: -10 },
+                isEthical: true,
+                miniGame: SCREENS.PRESS_BRIEFING
             }
         ]
     },
@@ -178,7 +181,13 @@ const checkCholeraDeathRoll = (choleraRisk) => {
 const EventScreen = () => {
     const { state, dispatch } = useGame();
     // Use functional initializer to pick event once on mount safely
-    const [event] = useState(() => EVENTS[Math.floor(Math.random() * EVENTS.length)]);
+    const [event] = useState(() => {
+        // Force the first event if no events have been seen yet
+        if (state.stats.eventCount === 0) {
+            return EVENTS.find(e => e.id === 'VENEZUELA_START') || EVENTS[0];
+        }
+        return EVENTS[Math.floor(Math.random() * EVENTS.length)];
+    });
     const [isProcessing, setIsProcessing] = useState(false);
     const [statsGained, setStatsGained] = useState(null);
 
@@ -281,6 +290,7 @@ const EventScreen = () => {
                 <ChoiceMenu
                     options={event.options}
                     onSelect={handleSelect}
+                    title="WHAT DO YOU DO?"
                     disabled={isProcessing || !typingFinished}
                 />
             </div>

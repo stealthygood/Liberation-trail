@@ -3,13 +3,17 @@ import { useGame } from '../../context/GameContext';
 import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
 import Typewriter from '../Typewriter';
+import CelebrationOverlay from '../CelebrationOverlay';
+import MiniGameIntro from '../MiniGameIntro';
 
 const SanctionsGame = () => {
     const { dispatch } = useGame();
     const [timeLeft, setTimeLeft] = useState(15);
     const [shipsBlocked, setShipsBlocked] = useState(0);
     const [ships, setShips] = useState([]);
-    const [gameState, setGameState] = useState('READY'); // READY, PLAYING, FINISHED
+    const [gameState, setGameState] = useState('PLAYING'); // Start in playing because intro handles ready
+    const [showIntro, setShowIntro] = useState(true);
+    const [statsGained, setStatsGained] = useState(null);
     const gameContainerRef = useRef(null);
     const shipIdCounter = useRef(0);
 
@@ -81,18 +85,17 @@ const SanctionsGame = () => {
     };
 
     const handleFinish = useCallback(() => {
-        const oilGained = Math.floor(shipsBlocked * 1.5);
-        const choleraRiskIncrease = Math.floor(shipsBlocked * 2);
-        const chaosIncrease = Math.floor(shipsBlocked * 3);
+        const effects = {
+            oil: Math.floor(shipsBlocked * 1.5),
+            choleraRisk: Math.floor(shipsBlocked * 2),
+            chaos: Math.floor(shipsBlocked * 3),
+            warCrimes: Math.floor(shipsBlocked / 5),
+            fifaPrize: true
+        };
 
         dispatch({
             type: 'MODIFY_STATS',
-            payload: {
-                oil: oilGained,
-                choleraRisk: choleraRiskIncrease,
-                chaos: chaosIncrease,
-                warCrimes: Math.floor(shipsBlocked / 5)
-            }
+            payload: effects
         });
 
         dispatch({
@@ -100,30 +103,13 @@ const SanctionsGame = () => {
             payload: {
                 event: 'SANCTIONS SIEGE',
                 choice: `BLOCKED ${shipsBlocked} SHIPS`,
-                effects: { oil: oilGained, choleraRisk: choleraRiskIncrease, chaos: chaosIncrease }
+                effects: { oil: effects.oil, choleraRisk: effects.choleraRisk, chaos: effects.chaos }
             }
         });
 
-        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+        setStatsGained(effects);
     }, [shipsBlocked, dispatch]);
 
-    if (gameState === 'READY') {
-        return (
-            <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-                <h2 className="text-2xl mb-4 font-bold tracking-tighter uppercase">OPERATION: SILENT SIEGE</h2>
-                <div className="max-w-sm mb-6 border-2 border-[var(--color-phosphor)] p-4 bg-black/60">
-                    <p className="text-sm italic mb-2">"True freedom includes the freedom to starve."</p>
-                    <p className="text-xs opacity-70 uppercase tracking-tighter">
-                        Tap trade ships to block cargo.
-                        Ignore the red crosses.
-                    </p>
-                </div>
-                <button onClick={() => { setGameState('PLAYING'); playSound('success'); }}>
-                    [ INITIATE ]
-                </button>
-            </div>
-        );
-    }
 
     if (gameState === 'FINISHED') {
         return (
@@ -170,6 +156,24 @@ const SanctionsGame = () => {
             <div className="absolute bottom-2 left-0 w-full text-center text-[10px] opacity-40 uppercase tracking-tighter px-2">
                 Note: Blocking Red Cross vessels adds [classified] status.
             </div>
+            {showIntro && (
+                <MiniGameIntro
+                    title="OPERATION: SILENT SIEGE"
+                    description="Economic leverage is the ultimate diplomatic tool. Properly applied pressure can encourage even the most stubborn regimes to appreciate the benefits of... cooperation."
+                    instruction="TAP TRADE SHIPS TO BLOCK CARGO. IGNORE THE RED CROSS VESSELS."
+                    onComplete={() => setShowIntro(false)}
+                />
+            )}
+
+            {statsGained && (
+                <CelebrationOverlay
+                    statsGained={statsGained}
+                    onComplete={() => {
+                        setStatsGained(null);
+                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+                    }}
+                />
+            )}
         </div>
     );
 };

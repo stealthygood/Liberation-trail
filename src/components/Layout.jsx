@@ -1,7 +1,5 @@
 import React from 'react';
 import WarAssistant from './WarAssistant';
-import Anthem from './Anthem';
-import SoundToggle from './SoundToggle';
 import StatusBar from './StatusBar';
 
 const Layout = ({ children }) => {
@@ -10,9 +8,7 @@ const Layout = ({ children }) => {
             <div className="screen-flicker">
                 <StatusBar />
                 {children}
-                <SoundToggle />
                 <WarAssistant />
-                <Anthem />
             </div>
         </div>
     );

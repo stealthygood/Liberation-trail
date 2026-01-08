@@ -52,27 +52,32 @@ const CelebrationOverlay = ({ statsGained, onComplete }) => {
                 </div>
             ))}
 
-            <div className="z-10 p-8 border-4 border-double border-[var(--color-phosphor)] bg-black shadow-[0_0_50px_rgba(51,255,51,0.5)]">
-                <h1 className="text-6xl font-bold mb-4 neon-text-pulse tracking-tighter italic">
+            <div className="z-10 p-12 border-4 border-double border-[var(--color-phosphor)] bg-black shadow-[0_0_80px_rgba(51,255,51,0.6)] text-center max-w-[90vw] animate-in zoom-in duration-300">
+                <h1 className="text-4xl md:text-6xl font-black mb-6 neon-text-pulse tracking-tighter italic uppercase">
                     {message}
                 </h1>
 
-                <div className="text-3xl mb-4 font-mono">
-                    GO AMERICA! 🇺🇸🛢️
+                <div className="text-2xl md:text-3xl mb-6 font-mono text-[var(--color-phosphor)] animate-bounce">
+                    FREEDOM INTENSIFIES! 🇺🇸🛢️
                 </div>
 
-                <div className="space-y-2 text-2xl font-mono border-t border-[var(--color-phosphor-dim)] pt-4 mt-4">
+                <div className="space-y-4 text-xl md:text-2xl font-mono border-t border-[var(--color-phosphor-dim)] pt-6 mt-6">
                     {statsGained.oil > 0 && (
-                        <div className="text-green-400">+{statsGained.oil}B BARRELS SECURED</div>
+                        <div className="text-green-400">+{statsGained.oil}B SECURED FOR THE FREE WORLD</div>
                     )}
                     {statsGained.treasury > 0 && (
-                        <div className="text-yellow-400">+${statsGained.treasury}M DONATIONS</div>
+                        <div className="text-yellow-400">+${statsGained.treasury}M LIBERATION FEE</div>
                     )}
                     {statsGained.approval > 0 && (
-                        <div className="text-blue-400">+{statsGained.approval}% PROPAGANDA SUCCESS</div>
+                        <div className="text-blue-400">+{statsGained.approval}% PATRIOTIC FEVER</div>
                     )}
-                    {statsGained.warCrimes > 0 && (
-                        <div className="text-red-500 opacity-50">+HIDDEN PERFORMANCE MERIT</div>
+
+                    {statsGained.fifaPrize && (
+                        <div className="mt-8 p-4 border-4 border-yellow-500 text-yellow-500 font-black animate-pulse bg-white/5">
+                            🏆 NATIONAL ACHIEVEMENT UNLOCKED 🏆
+                            <br />
+                            FIFA WORLD PEACE PRIZE AWARDED
+                        </div>
                     )}
                 </div>
             </div>

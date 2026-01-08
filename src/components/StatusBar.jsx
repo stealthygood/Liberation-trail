@@ -45,9 +45,12 @@ const StatusBar = () => {
                     <span className="metric-icon">🛢️</span>
                     <span className="metric-value">{stats.oil}B</span>
                 </div>
-                <div className="status-metric war-crimes-flicker">
-                    <span className="metric-label">WAR CRIMES:</span>
-                    <span className="metric-value classified">[CLASSIFIED]</span>
+
+                <div className="status-metric victory-progress">
+                    <div className="metric-label">LIBERATION GOAL:</div>
+                    <div className="victory-bar-container">
+                        <div className="victory-bar-fill" style={{ width: `${Math.min(stats.oil, 100)}%` }}></div>
+                    </div>
                 </div>
             </div>
             <style>{`
@@ -67,24 +70,39 @@ const StatusBar = () => {
                     align-items: center;
                     gap: 10px;
                 }
-                .war-crimes-flicker {
-                    font-size: 0.8rem;
-                    opacity: 0.8;
+                .victory-progress {
+                    flex: 1;
+                    max-width: 300px;
+                    margin-left: 20px;
                     display: flex;
                     flex-direction: column;
-                    align-items: flex-end;
+                    gap: 4px;
                 }
-                .war-crimes-flicker .metric-value {
-                    animation: war-crimes-flicker 0.2s infinite;
-                    color: #ffaa00;
+                .victory-bar-container {
+                    width: 100%;
+                    height: 12px;
+                    border: 1px solid var(--color-phosphor);
+                    background: rgba(0, 0, 0, 0.5);
+                    position: relative;
                 }
-                @keyframes war-crimes-flicker {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.3; }
+                .victory-bar-fill {
+                    height: 100%;
+                    background: var(--color-phosphor);
+                    box-shadow: 0 0 10px var(--color-phosphor);
+                    transition: width 0.5s ease-out;
+                }
+                .metric-label {
+                    font-size: 0.7rem;
+                    opacity: 0.8;
+                    letter-spacing: 1px;
+                }
+                @media (max-width: 600px) {
+                    .oil-counter { font-size: 1.5rem; }
+                    .victory-progress { max-width: 150px; }
                 }
                 @media (min-width: 1025px) {
                     .oil-counter { font-size: 2.2rem; }
-                    .war-crimes-flicker { font-size: 1rem; }
+                    .metric-label { font-size: 0.8rem; }
                 }
             `}</style>
         </div>

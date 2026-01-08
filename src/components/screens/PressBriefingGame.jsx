@@ -3,6 +3,8 @@ import { useGame } from '../../context/GameContext';
 import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
 import Typewriter from '../Typewriter';
+import CelebrationOverlay from '../CelebrationOverlay';
+import MiniGameIntro from '../MiniGameIntro';
 
 const QUESTIONS = [
     {
@@ -43,6 +45,8 @@ const PressBriefingGame = () => {
     const [timer, setTimer] = useState(5); // 5 seconds to answer
     const [gameOver, setGameOver] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [showIntro, setShowIntro] = useState(true);
+    const [statsGained, setStatsGained] = useState(null);
 
     const currentQ = QUESTIONS[qIndex];
 
@@ -73,7 +77,9 @@ const PressBriefingGame = () => {
             } else {
                 setGameOver(true);
                 playSound('success');
-                dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+                const effects = { approval: 10, fifaPrize: true };
+                dispatch({ type: 'MODIFY_STATS', payload: effects });
+                setStatsGained(effects);
             }
         }, 800);
     }, [qIndex, isProcessing, gameOver, dispatch]);
@@ -157,6 +163,24 @@ const PressBriefingGame = () => {
  /      ^      \\
 /_______________\\`}
             </pre>
+            {showIntro && (
+                <MiniGameIntro
+                    title="THE SPIN DOCTOR'S HOUR"
+                    description="The press is hungry for 'facts'. Give them the alternative variety. Every successful redirection is a victory for national stability and your career."
+                    instruction="CHOOSE THE MOST PATRIOTIC ANSWERS. AVOID THE TRUTH AT ALL COSTS."
+                    onComplete={() => setShowIntro(false)}
+                />
+            )}
+
+            {statsGained && (
+                <CelebrationOverlay
+                    statsGained={statsGained}
+                    onComplete={() => {
+                        setStatsGained(null);
+                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+                    }}
+                />
+            )}
         </div>
     );
 };

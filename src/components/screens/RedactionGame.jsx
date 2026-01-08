@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useGame } from '../../context/GameContext';
 import { SCREENS } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
+import CelebrationOverlay from '../CelebrationOverlay';
+import MiniGameIntro from '../MiniGameIntro';
 
 const REPORT_TEMPLATE = `TOP SECRET // EYES ONLY
 SUBJECT: AFTER-ACTION REPORT - OPERATION LIBERATION
@@ -26,6 +28,8 @@ const RedactionGame = () => {
     const [redactedCount, setRedactedCount] = useState(0);
     const [leakedCount] = useState(0); // setLeakedCount removed as it's not currently used
     const [gameOver, setGameOver] = useState(false);
+    const [showIntro, setShowIntro] = useState(true);
+    const [statsGained, setStatsGained] = useState(null);
 
     // Parse the report text into interactive chunks
     const chunks = useMemo(() => {
@@ -62,9 +66,8 @@ const RedactionGame = () => {
 
         if (isSuccess) {
             playSound('success');
-            setTimeout(() => {
-                dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-            }, 1000);
+            const effects = { approval: 10, fifaPrize: true };
+            setStatsGained(effects);
         } else {
             playSound('error');
             setTimeout(() => {
@@ -194,6 +197,24 @@ const RedactionGame = () => {
                     animation: blink 0.5s infinite;
                 }
             `}</style>
+            {showIntro && (
+                <MiniGameIntro
+                    title="OPERATION: INK BLOT"
+                    description="The truth is a dangerous weapon in the hands of the public. Use our high-performance digital ink to ensure only the most inspiring narratives reach the press."
+                    instruction="TAP SENSITIVE WORDS (IN RED) TO REDACT THEM. AVOID REDACTING DECOYS."
+                    onComplete={() => setShowIntro(false)}
+                />
+            )}
+
+            {statsGained && (
+                <CelebrationOverlay
+                    statsGained={statsGained}
+                    onComplete={() => {
+                        setStatsGained(null);
+                        dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+                    }}
+                />
+            )}
         </div>
     );
 };
