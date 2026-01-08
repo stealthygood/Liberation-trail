@@ -8,34 +8,6 @@ import CelebrationOverlay from '../CelebrationOverlay';
 
 const EVENTS = [
     {
-        id: 'VENEZUELA_START',
-        title: '*** LIBERATION ALERT: VENEZUELA ***',
-        text: 'President Maduro stated: "Mi Oil, no es su Oil." This blatant disregard for American energy security cannot stand.',
-        options: [
-            {
-                id: 'KIDNAP',
-                name: 'KIDNAP PRESIDENT',
-                description: 'Extract him via unregistered aircraft.',
-                effects: { oil: 20, treasury: 10, warCrimes: 5 },
-                miniGame: SCREENS.DRONE_STRIKE
-            },
-            {
-                id: 'MEDDLE',
-                name: 'MEDDLE IN ELECTIONS',
-                description: 'Inject $50M into opposition candidates.',
-                effects: { oil: 10, treasury: -5, approval: 10 },
-                miniGame: SCREENS.SUPER_PAC
-            },
-            {
-                id: 'CLEAN_ENERGY',
-                name: 'INVEST IN DOMESTIC CLEAN ENERGY',
-                description: 'Reduce dependency on foreign oil. (Ethical/Unprofitable)',
-                effects: { choleraRisk: 50, approval: -20, oil: -10 },
-                isEthical: true
-            }
-        ]
-    },
-    {
         title: '*** PIPELINE OBSTRUCTION ***',
         text: 'Eco-terrorists (unpaid students) are protesting the new "Freedom Flow" pipeline through a nature preserve.',
         options: [
@@ -182,10 +154,6 @@ const EventScreen = () => {
     const { state, dispatch } = useGame();
     // Use functional initializer to pick event once on mount safely
     const [event] = useState(() => {
-        // Force the first event if no events have been seen yet
-        if (state.stats.eventCount === 0) {
-            return EVENTS.find(e => e.id === 'VENEZUELA_START') || EVENTS[0];
-        }
         return EVENTS[Math.floor(Math.random() * EVENTS.length)];
     });
     const [isProcessing, setIsProcessing] = useState(false);

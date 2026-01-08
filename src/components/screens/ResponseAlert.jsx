@@ -1,38 +1,76 @@
+import { useState, useCallback } from 'react';
 import { useGame } from '../../context/GameContext';
 import ChoiceMenu from '../ChoiceMenu';
 import Typewriter from '../Typewriter';
 import { SCREENS } from '../../utils/constants';
+import { playSound } from '../../utils/SoundManager';
+import CelebrationOverlay from '../CelebrationOverlay';
 
 const ResponseAlert = () => {
     const { state, dispatch } = useGame();
     const { selectedCountry } = state;
+    const [statsGained, setStatsGained] = useState(null);
+    const [isProcessing, setIsProcessing] = useState(false);
 
-    const handleSelect = (optionId) => {
-        if (optionId === 'SUSTAINABLE') {
-            dispatch({ type: 'NAVIGATE', payload: SCREENS.DEATH });
-        } else {
-            // For now, any other option goes to an event or victory (placeholder)
-            // In full game, this would loop to events. 
-            // Let's just go to a generic EVENT screen for now, or VICTORY if we want to show the bad ending immediately for testing.
-            dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+    const handleSelect = useCallback((optionId) => {
+        if (isProcessing) return;
+        setIsProcessing(true);
+
+        const selectedOption = options.find(opt => opt.id === optionId);
+
+        // Apply stat effects
+        if (selectedOption.effects) {
+            dispatch({ type: 'MODIFY_STATS', payload: selectedOption.effects });
         }
-    };
+
+        // Log to history
+        dispatch({
+            type: 'ADD_HISTORY',
+            payload: {
+                event: 'LIBERATION ALERT',
+                choice: optionId,
+                effects: selectedOption.effects
+            }
+        });
+
+        if (selectedOption.id === 'CLEAN_ENERGY') {
+            playSound('error');
+            dispatch({ type: 'NAVIGATE', payload: SCREENS.DEATH });
+            return;
+        }
+
+        const isProfitable = selectedOption.effects?.oil > 0 || selectedOption.effects?.treasury > 0;
+
+        if (isProfitable) {
+            setStatsGained(selectedOption.effects);
+            return;
+        }
+
+        playSound('success');
+        dispatch({ type: 'NAVIGATE', payload: selectedOption.miniGame || SCREENS.EVENT });
+    }, [dispatch, isProcessing]);
 
     const options = [
         {
-            id: 'SUSTAINABLE',
-            name: 'INVEST IN CLEAN ENERGY',
-            description: 'Develop domestic solar, wind, and grid storage to reduce foreign oil dependency'
+            id: 'KIDNAP',
+            name: 'KIDNAP PRESIDENT',
+            description: 'Extract him via unregistered aircraft.',
+            effects: { oil: 20, treasury: 10, warCrimes: 5 },
+            miniGame: SCREENS.DRONE_STRIKE
         },
         {
             id: 'MEDDLE',
             name: 'MEDDLE IN ELECTIONS',
-            description: 'Fund opposition parties, spread disinformation, destabilize government'
+            description: 'Inject $50M into opposition candidates.',
+            effects: { oil: 10, treasury: -5, approval: 10 },
+            miniGame: SCREENS.SUPER_PAC
         },
         {
-            id: 'KIDNAP',
-            name: 'KIDNAP PRESIDENT',
-            description: 'Extraordinary rendition, charge with narco-terrorism, install friendly regime'
+            id: 'CLEAN_ENERGY',
+            name: 'INVEST IN DOMESTIC CLEAN ENERGY',
+            description: 'Reduce dependency on foreign oil. (Ethical/Unprofitable)',
+            effects: { choleraRisk: 50, approval: -20, oil: -10 },
+            isEthical: true
         }
     ];
 
@@ -45,21 +83,36 @@ const ResponseAlert = () => {
             <div className="mb-4">
                 <h3 className="text-xl underline mb-2">INTELLIGENCE REPORT:</h3>
                 <p className="mb-4">
-                    target: {selectedCountry?.name || 'UNKNOWN'}
+                    TARGET: {selectedCountry?.name || 'VENEZUELA'}
                 </p>
                 <div className="min-h-[100px] mb-4">
                     <Typewriter
-                        text={`[${selectedCountry?.name}] has indicated they are NOT INTERESTED in U.S. corporations extracting their natural resources. Their president stated: "Our oil belongs to our people, not your shareholders."`}
+                        text={`President Maduro has stated: "Mi Oil, no es su Oil." This blatant disregard for American energy security and shareholder value cannot stand.`}
                         speed={15}
                     />
                 </div>
             </div>
 
-            <h3 className="text-xl mb-2">RECOMMENDED RESPONSE OPTIONS:</h3>
+            <h3 className="text-xl mb-4 font-bold border-t border-[var(--color-phosphor-dim)] pt-4">
+                WHAT DO YOU DO?
+            </h3>
+
             <ChoiceMenu
                 options={options}
                 onSelect={handleSelect}
+                disabled={isProcessing}
             />
+
+            {statsGained && (
+                <CelebrationOverlay
+                    statsGained={statsGained}
+                    onComplete={() => {
+                        setStatsGained(null);
+                        const selectedOption = options.find(opt => opt.effects === statsGained);
+                        dispatch({ type: 'NAVIGATE', payload: selectedOption.miniGame || SCREENS.EVENT });
+                    }}
+                />
+            )}
         </div>
     );
 };
