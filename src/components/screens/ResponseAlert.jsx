@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useGame } from '../../context/GameContext';
 import ChoiceMenu from '../ChoiceMenu';
 import Typewriter from '../Typewriter';
-import { SCREENS } from '../../utils/constants';
+import { SCREENS, COUNTRIES } from '../../utils/constants';
 import { playSound } from '../../utils/SoundManager';
 import CelebrationOverlay from '../CelebrationOverlay';
 
@@ -11,6 +11,32 @@ const ResponseAlert = () => {
     const { selectedCountry } = state;
     const [statsGained, setStatsGained] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
+
+    const countryData = COUNTRIES.find(c => c.id === selectedCountry) || COUNTRIES[0];
+
+    const options = [
+        {
+            id: 'KIDNAP',
+            name: 'KIDNAP PRESIDENT',
+            description: 'Extract him via unregistered aircraft.',
+            effects: { oil: 20, treasury: 10, warCrimes: 5 },
+            miniGame: SCREENS.DRONE_STRIKE
+        },
+        {
+            id: 'MEDDLE',
+            name: 'MEDDLE IN ELECTIONS',
+            description: 'Inject $50M into opposition candidates.',
+            effects: { oil: 10, treasury: -5, approval: 10 },
+            miniGame: SCREENS.SUPER_PAC
+        },
+        {
+            id: 'CLEAN_ENERGY',
+            name: 'INVEST IN DOMESTIC CLEAN ENERGY',
+            description: 'Reduce dependency on foreign oil. (Ethical/Unprofitable)',
+            effects: { choleraRisk: 50, approval: -20, oil: -10 },
+            isEthical: true
+        }
+    ];
 
     const handleSelect = useCallback((optionId) => {
         if (isProcessing) return;
@@ -48,46 +74,22 @@ const ResponseAlert = () => {
 
         playSound('success');
         dispatch({ type: 'NAVIGATE', payload: selectedOption.miniGame || SCREENS.EVENT });
-    }, [dispatch, isProcessing]);
-
-    const options = [
-        {
-            id: 'KIDNAP',
-            name: 'KIDNAP PRESIDENT',
-            description: 'Extract him via unregistered aircraft.',
-            effects: { oil: 20, treasury: 10, warCrimes: 5 },
-            miniGame: SCREENS.DRONE_STRIKE
-        },
-        {
-            id: 'MEDDLE',
-            name: 'MEDDLE IN ELECTIONS',
-            description: 'Inject $50M into opposition candidates.',
-            effects: { oil: 10, treasury: -5, approval: 10 },
-            miniGame: SCREENS.SUPER_PAC
-        },
-        {
-            id: 'CLEAN_ENERGY',
-            name: 'INVEST IN DOMESTIC CLEAN ENERGY',
-            description: 'Reduce dependency on foreign oil. (Ethical/Unprofitable)',
-            effects: { choleraRisk: 50, approval: -20, oil: -10 },
-            isEthical: true
-        }
-    ];
+    }, [dispatch, isProcessing, options]);
 
     return (
-        <div className="h-full flex-col p-8">
+        <div className="h-full flex-col p-8 lg:p-12">
             <div className="border-2 border-red-500 text-red-500 p-4 mb-6 animate-pulse text-center">
                 <h2 className="text-2xl font-bold">*** ALERT *** ALERT *** ALERT ***</h2>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 mt-6 lg:mt-0">
                 <h3 className="text-xl underline mb-2">INTELLIGENCE REPORT:</h3>
                 <p className="mb-4">
-                    TARGET: {selectedCountry?.name || 'VENEZUELA'}
+                    TARGET: {countryData.name}
                 </p>
                 <div className="min-h-[100px] mb-4">
                     <Typewriter
-                        text={`President Maduro has stated: "Mi Oil, no es su Oil." This blatant disregard for American energy security and shareholder value cannot stand.`}
+                        text={`${countryData.leader || 'The regime'} has stated: "${countryData.quote || 'No.'}" This blatant disregard for American energy security and shareholder value cannot stand.`}
                         speed={15}
                     />
                 </div>

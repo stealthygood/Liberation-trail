@@ -18,10 +18,17 @@ const getAudioContext = () => {
 };
 
 export const playSound = (type) => {
-    if (isMuted) return;
+    console.log('[SoundManager] Attempting to play:', type);
+    if (isMuted) {
+        console.log('[SoundManager] Muted, skipping.');
+        return;
+    }
 
     const ctx = getAudioContext();
-    if (!ctx) return;
+    if (!ctx) {
+        console.warn('[SoundManager] No AudioContext available');
+        return;
+    }
 
     if (ctx.state === 'suspended') {
         ctx.resume();

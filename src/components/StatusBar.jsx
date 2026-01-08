@@ -27,8 +27,8 @@ const formatTreasury = (value) => {
  * Persistent status bar showing all game resources in retro ASCII style
  */
 const StatusBar = () => {
-    const { state } = useGame();
-    const { stats, showStatusBar, currentScreen, selectedCountry } = state;
+    const { state, dispatch } = useGame();
+    const { stats, showStatusBar, currentScreen, selectedCountry, soundEnabled } = state;
 
     // Don't show on certain screens
     const hiddenScreens = [SCREENS.DISCLAIMER, SCREENS.TITLE, SCREENS.DEATH, SCREENS.VICTORY];
@@ -36,7 +36,7 @@ const StatusBar = () => {
         return null;
     }
 
-    const countryData = COUNTRIES.find(c => c.id === selectedCountry);
+    const countryData = COUNTRIES.find(c => c.id === selectedCountry) || COUNTRIES[0];
 
     return (
         <div className="status-bar">
@@ -52,6 +52,14 @@ const StatusBar = () => {
                         <div className="victory-bar-fill" style={{ width: `${Math.min(stats.oil, 100)}%` }}></div>
                     </div>
                 </div>
+
+                <button
+                    className="sound-toggle-btn"
+                    onClick={() => dispatch({ type: 'TOGGLE_SOUND' })}
+                    title={soundEnabled ? "Mute Sound" : "Unmute Sound"}
+                >
+                    {soundEnabled ? '🔊' : '🔇'}
+                </button>
             </div>
             <style>{`
                 .status-bar-simple {
@@ -96,9 +104,29 @@ const StatusBar = () => {
                     opacity: 0.8;
                     letter-spacing: 1px;
                 }
+                .sound-toggle-btn {
+                    background: transparent;
+                    border: 1px solid var(--color-phosphor);
+                    color: var(--color-phosphor);
+                    padding: 4px 8px;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    width: auto;
+                    margin: 0 0 0 15px;
+                    box-shadow: none;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .sound-toggle-btn:hover {
+                    background: var(--color-phosphor);
+                    color: #000;
+                }
                 @media (max-width: 600px) {
-                    .oil-counter { font-size: 1.5rem; }
-                    .victory-progress { max-width: 150px; }
+                    .oil-counter { font-size: 1.2rem; }
+                    .victory-progress { max-width: 100px; margin-left: 10px; }
+                    .sound-toggle-btn { padding: 2px 4px; font-size: 0.8rem; margin-left: 8px; }
                 }
                 @media (min-width: 1025px) {
                     .oil-counter { font-size: 2.2rem; }

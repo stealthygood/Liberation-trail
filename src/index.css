@@ -137,6 +137,12 @@ pre {
     0 0 5px var(--color-phosphor);
 }
 
+@media (max-width: 1024px) {
+  .crt-container {
+    padding: 25px 15px 15px 15px !important;
+  }
+}
+
 h1 {
   font-size: 1.6rem;
   letter-spacing: 2px;
@@ -259,7 +265,8 @@ button:focus {
 .status-bar {
   position: relative;
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  /* Increased margin to push content down */
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.75rem;
   z-index: 5;

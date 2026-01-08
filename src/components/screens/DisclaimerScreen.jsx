@@ -8,7 +8,7 @@ const DisclaimerScreen = () => {
 
     const proceed = useCallback(() => {
         playSound('type');
-        dispatch({ type: 'NAVIGATE', payload: SCREENS.COUNTRY_SELECT });
+        dispatch({ type: 'START_GAME' });
     }, [dispatch]);
 
     useEffect(() => {

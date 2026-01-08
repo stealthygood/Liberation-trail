@@ -57,8 +57,16 @@ const Anthem = () => {
 
         // Auto-start on click anywhere if blocked
         const handleInteraction = () => {
-            if (ctx.state === 'suspended') ctx.resume();
-            if (!isPlayingRef.current) start();
+            console.log('[Anthem] Interaction detected, state:', ctx.state);
+            if (ctx.state === 'suspended') {
+                ctx.resume().then(() => {
+                    console.log('[Anthem] Context resumed');
+                });
+            }
+            if (!isPlayingRef.current) {
+                console.log('[Anthem] Starting playback');
+                start();
+            }
         };
 
         window.addEventListener('click', handleInteraction);
