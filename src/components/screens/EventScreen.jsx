@@ -19,7 +19,7 @@ const EVENTS = [
                 isEthical: true
             },
             {
-                id: ACCEPT,
+                id: 'ACCEPT',
                 name: 'ACCEPT',
                 description: 'Route through shell corporations.',
                 effects: { treasury: 5, oil: 5, warCrimes: 1, approval: 3 },
