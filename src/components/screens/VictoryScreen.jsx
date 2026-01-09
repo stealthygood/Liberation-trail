@@ -62,55 +62,57 @@ const VictoryScreen = () => {
 
     return (
         <ScreenLayout center>
-            <ASCIIArt art={VICTORY_ART} className="mb-2 text-yellow-400 scale-75 md:scale-100" />
+            <div className="w-full max-w-2xl px-4 text-center">
+                <ASCIIArt art={VICTORY_ART} className="mb-3 text-yellow-400 scale-[0.6] md:scale-100" />
 
-            <h1 className="text-4xl md:text-7xl font-black mb-6 text-yellow-400 leading-tight italic uppercase tracking-tighter bg-black/40 px-4 py-2" style={{ textShadow: '0 0 40px gold' }}>
-                {ending.title}
-            </h1>
+                <h1 className="text-3xl md:text-6xl font-black mb-4 text-yellow-400 leading-tight italic uppercase tracking-tighter bg-black/40 px-3 py-2" style={{ textShadow: '0 0 40px gold' }}>
+                    {ending.title}
+                </h1>
 
-            <div className="border-4 border-double border-[var(--color-phosphor)] p-5 md:p-8 max-w-2xl w-full mb-8 text-left bg-black/80 shadow-[0_0_20px_rgba(51,255,51,0.2)]">
-                <div className="mb-6 text-xl md:text-2xl leading-relaxed text-[var(--color-phosphor)]">
-                    <Typewriter text={ending.text} speed={30} />
+                <div className="border-4 border-double border-[var(--color-phosphor)] p-4 md:p-6 w-full mb-4 text-left bg-black/80 shadow-[0_0_20px_rgba(51,255,51,0.2)]">
+                    <div className="mb-4 text-base md:text-xl leading-relaxed text-[var(--color-phosphor)]">
+                        <Typewriter text={ending.text} speed={30} />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs md:text-sm font-mono uppercase border-t border-[var(--color-phosphor-dim)] pt-4">
+                        <div className="space-y-1">
+                            <div className="opacity-50 text-[10px] mb-2">--- MISSION PERFORMANCE ---</div>
+                            <div className="flex justify-between"><span>OIL SECURED:</span> <span className="text-green-400 font-bold">{stats.oil}B</span></div>
+                            <div className="flex justify-between"><span>APPROVAL:</span> <span className="text-blue-400 font-bold">{stats.approval}%</span></div>
+                            <div className="flex justify-between"><span>CHAOS LEVEL:</span> <span className="text-red-400 font-bold">{stats.chaos}%</span></div>
+                            <div className="flex justify-between"><span>WAR CRIMES:</span> <span className="text-yellow-600 font-bold">{stats.warCrimes > 12 ? 'MAXIMUM' : stats.warCrimes}</span></div>
+                        </div>
+                        <div className="space-y-1">
+                            <div className="opacity-50 text-[10px] mb-2">--- PERSISTENT RECORD ---</div>
+                            <div className="flex justify-between"><span>TOTAL OIL:</span> <span className="text-green-500">{persistence.totalOilSecured + stats.oil}B</span></div>
+                            <div className="flex justify-between"><span>HIGH SCORE:</span> <span className="text-yellow-500 font-bold">{persistence.highScore}B</span></div>
+                            <div className="flex justify-between"><span>CAREER DEATHS:</span> <span className="text-red-500">{persistence.choleraDeaths}</span></div>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm font-mono uppercase border-t border-[var(--color-phosphor-dim)] pt-6">
-                    <div className="space-y-1">
-                        <div className="opacity-50 text-[10px] mb-2">--- MISSION PERFORMANCE ---</div>
-                        <div className="flex justify-between"><span>OIL SECURED:</span> <span className="text-green-400 font-bold">{stats.oil}B</span></div>
-                        <div className="flex justify-between"><span>APPROVAL:</span> <span className="text-blue-400 font-bold">{stats.approval}%</span></div>
-                        <div className="flex justify-between"><span>CHAOS LEVEL:</span> <span className="text-red-400 font-bold">{stats.chaos}%</span></div>
-                        <div className="flex justify-between"><span>WAR CRIMES:</span> <span className="text-yellow-600 font-bold">{stats.warCrimes > 12 ? 'MAXIMUM' : stats.warCrimes}</span></div>
-                    </div>
-                    <div className="space-y-1">
-                        <div className="opacity-50 text-[10px] mb-2">--- PERSISTENT RECORD ---</div>
-                        <div className="flex justify-between"><span>TOTAL OIL:</span> <span className="text-green-500">{persistence.totalOilSecured + stats.oil}B</span></div>
-                        <div className="flex justify-between"><span>HIGH SCORE:</span> <span className="text-yellow-500 font-bold">{persistence.highScore}B</span></div>
-                        <div className="flex justify-between"><span>CAREER DEATHS:</span> <span className="text-red-500">{persistence.choleraDeaths}</span></div>
-                    </div>
+                <div className="mb-3 italic opacity-70 text-xs md:text-sm">
+                    "Our liberation of {selectedCountry?.name || 'THE TARGET'} is a model for the world."
                 </div>
-            </div>
 
-            <div className="mb-4 italic opacity-70 text-sm">
-                "Our liberation of {selectedCountry?.name || 'THE TARGET'} is a model for the world."
-            </div>
-
-            <div className="mt-8 flex flex-col items-center gap-4">
-                <button
-                    onClick={() => {
-                        playSound('type');
-                        dispatch({ type: 'START_GAME' });
-                    }}
-                    onTouchEnd={(e) => {
-                        e.preventDefault();
-                        playSound('type');
-                        dispatch({ type: 'START_GAME' });
-                    }}
-                    className="text-2xl px-12 py-4 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black animate-pulse"
-                >
-                    [ LIBERATE ANOTHER NATION ]
-                </button>
-                <div className="text-xs opacity-50 uppercase font-mono">
-                    OR PRESS ANY KEY
+                <div className="mt-4 flex flex-col items-center gap-3">
+                    <button
+                        onClick={() => {
+                            playSound('type');
+                            dispatch({ type: 'START_GAME' });
+                        }}
+                        onTouchEnd={(e) => {
+                            e.preventDefault();
+                            playSound('type');
+                            dispatch({ type: 'START_GAME' });
+                        }}
+                        className="text-lg md:text-2xl px-8 md:px-12 py-3 md:py-4 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black animate-pulse"
+                    >
+                        [ LIBERATE ANOTHER NATION ]
+                    </button>
+                    <div className="text-xs opacity-50 uppercase font-mono">
+                        OR PRESS ANY KEY
+                    </div>
                 </div>
             </div>
         </ScreenLayout>
