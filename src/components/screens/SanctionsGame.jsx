@@ -125,7 +125,7 @@ const SanctionsGame = () => {
     }
 
     return (
-        <div className="relative flex-1 w-full overflow-hidden bg-[#050505] border-2 border-[var(--color-phosphor-dim)]">
+        <div className="relative flex-1 w-full h-full min-h-[400px] overflow-hidden bg-[#050505] border-2 border-[var(--color-phosphor-dim)]">
             <div className="absolute top-2 left-2 z-20 text-xs font-mono uppercase opacity-70">
                 COLLAPSE: {timeLeft}s
             </div>
