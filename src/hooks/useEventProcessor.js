@@ -91,15 +91,19 @@ export const useEventProcessor = (onNavigate = null) => {
         setStatsGained(null);
 
         const newOil = state.stats.oil + (gains?.oil || 0);
-        if (newOil >= 100) {
-            dispatch({ type: 'NAVIGATE', payload: SCREENS.VICTORY });
-        } else if (nextScreenLogic) {
-            const next = nextScreenLogic();
-            dispatch({ type: 'NAVIGATE', payload: next });
-        } else {
-            dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
-        }
-        setIsProcessing(false);
+
+        // Add delay before navigation to ensure celebration fully clears
+        setTimeout(() => {
+            if (newOil >= 100) {
+                dispatch({ type: 'NAVIGATE', payload: SCREENS.VICTORY });
+            } else if (nextScreenLogic) {
+                const next = nextScreenLogic();
+                dispatch({ type: 'NAVIGATE', payload: next });
+            } else {
+                dispatch({ type: 'NAVIGATE', payload: SCREENS.EVENT });
+            }
+            setIsProcessing(false);
+        }, 100);
     }, [statsGained, state.stats.oil, dispatch]);
 
     return {
