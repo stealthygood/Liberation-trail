@@ -41,15 +41,22 @@ const TitleScreen = () => {
 
     return (
         <ScreenLayout center>
-            <ASCIIArt art={TITLE_ART} />
+            <div className="w-full overflow-x-auto">
+                <ASCIIArt art={TITLE_ART} className="text-xs md:text-base" />
+            </div>
 
-            <div className="mt-8 text-center">
+            <div className="mt-8 text-center w-full px-4">
                 <button
                     onClick={() => {
                         playSound('type');
                         dispatch({ type: 'START_GAME' });
                     }}
-                    className="text-2xl px-12 py-4 animate-pulse"
+                    onTouchEnd={(e) => {
+                        e.preventDefault();
+                        playSound('type');
+                        dispatch({ type: 'START_GAME' });
+                    }}
+                    className="text-xl md:text-2xl px-8 md:px-12 py-4 animate-pulse"
                 >
                     [ INITIATE LIBERATION ]
                 </button>

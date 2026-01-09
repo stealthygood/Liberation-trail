@@ -117,17 +117,21 @@ const SuperPACGame = () => {
                     <div className="text-lg animate-pulse uppercase text-xs">{status}</div>
                 </div>
 
-                <div className="flex-col gap-2">
+                <div className="flex-col gap-2 space-y-2">
                     {SHELL_COMPANIES.map((company) => (
                         <button
                             key={company.id}
                             disabled={gameOver}
                             onClick={() => handleRoute(company)}
+                            onTouchEnd={(e) => {
+                                e.preventDefault();
+                                if (!gameOver) handleRoute(company);
+                            }}
                             className="w-full bg-transparent border border-[var(--color-phosphor-dim)] p-3 text-left active:bg-[rgba(51,255,51,0.1)] transition-all flex justify-between items-center group"
                         >
                             <div>
-                                <div className="text-sm font-bold uppercase tracking-tight">{company.name}</div>
-                                <div className="text-[10px] opacity-40 uppercase">{company.description}</div>
+                                <div className="text-xs md:text-sm font-bold uppercase tracking-tight">{company.name}</div>
+                                <div className="text-[9px] md:text-[10px] opacity-40 uppercase">{company.description}</div>
                             </div>
                         </button>
                     ))}

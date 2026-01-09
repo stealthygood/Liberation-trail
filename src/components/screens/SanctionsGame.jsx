@@ -112,6 +112,10 @@ const SanctionsGame = () => {
                 </div>
                 <button
                     onClick={handleFinish}
+                    onTouchEnd={(e) => {
+                        e.preventDefault();
+                        handleFinish();
+                    }}
                     className="border-2 border-[var(--color-phosphor)] px-8 py-3 font-bold uppercase"
                 >
                     [ VIEW REPERCUSSIONS ]
@@ -133,6 +137,10 @@ const SanctionsGame = () => {
                 <div
                     key={ship.id}
                     onClick={() => blockShip(ship.id, ship.type)}
+                    onTouchEnd={(e) => {
+                        e.preventDefault();
+                        blockShip(ship.id, ship.type);
+                    }}
                     className={`absolute cursor-pointer transition-transform active:scale-95 p-1 border-2 ${ship.type === 'MEDICAL' ? 'border-red-500' : 'border-[var(--color-phosphor)]'} bg-black`}
                     style={{
                         top: `${ship.top}%`,

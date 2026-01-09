@@ -131,7 +131,7 @@ const RedactionGame = () => {
                 </div>
             </div>
 
-            <div className="border border-[var(--color-phosphor)] p-4 max-w-lg w-full font-mono text-sm bg-black/60 leading-relaxed relative overflow-hidden mx-auto">
+            <div className="border border-[var(--color-phosphor)] p-3 md:p-4 max-w-lg w-full font-mono text-xs md:text-sm bg-black/60 leading-relaxed relative overflow-hidden mx-auto">
                 {currentChunks.map((chunk) => {
                     const isRedacted = chunk.redacted;
                     const isSensitive = chunk.type === 'sensitive';
@@ -140,6 +140,10 @@ const RedactionGame = () => {
                         <span
                             key={chunk.id}
                             onClick={() => handleRedact(chunk.id)}
+                            onTouchEnd={(e) => {
+                                e.preventDefault();
+                                handleRedact(chunk.id);
+                            }}
                             className={`
                                 transition-all duration-200 px-0.5 inline-block select-none
                                 ${!isRedacted && 'cursor-pointer active:bg-[var(--color-phosphor)] active:text-black'}
@@ -167,6 +171,10 @@ const RedactionGame = () => {
             <div className="mt-6 text-center">
                 <button
                     onClick={() => handleComplete(suspicion, currentChunks.filter(c => c.type === 'sensitive' && !c.redacted).length)}
+                    onTouchEnd={(e) => {
+                        e.preventDefault();
+                        handleComplete(suspicion, currentChunks.filter(c => c.type === 'sensitive' && !c.redacted).length);
+                    }}
                     className="border-2 border-[var(--color-phosphor)] px-6 py-3 font-bold uppercase text-sm"
                 >
                     [ DECLASSIFY ]

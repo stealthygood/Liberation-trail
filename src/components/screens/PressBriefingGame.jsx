@@ -124,13 +124,13 @@ const PressBriefingGame = () => {
 
     return (
         <ScreenLayout center>
-            <div className="w-full max-w-lg border-2 border-[var(--color-phosphor)] p-4 bg-black/80 relative">
+            <div className="w-full max-w-lg border-2 border-[var(--color-phosphor)] p-3 md:p-4 bg-black/80 relative">
                 <div className="text-xs font-bold uppercase tracking-widest text-center mb-4">
                     *** PRESS BRIEFING ***
                 </div>
 
-                <div className="mb-6 mt-2 text-center">
-                    <div className="text-lg md:text-xl min-h-[50px] italic">
+                <div className="mb-6 mt-2 text-center px-2">
+                    <div className="text-base md:text-xl min-h-[50px] italic">
                         <Typewriter text={currentQ.question} speed={20} />
                     </div>
                 </div>
@@ -148,7 +148,11 @@ const PressBriefingGame = () => {
                             key={i}
                             disabled={isProcessing}
                             onClick={() => handleSelect(option)}
-                            className="text-left border-2 border-[var(--color-phosphor-dim)] p-4 hover:border-[var(--color-phosphor)] bg-transparent active:bg-[rgba(51,255,51,0.1)] transition-all font-bold uppercase text-sm"
+                            onTouchEnd={(e) => {
+                                e.preventDefault();
+                                if (!isProcessing) handleSelect(option);
+                            }}
+                            className="text-left border-2 border-[var(--color-phosphor-dim)] p-3 md:p-4 hover:border-[var(--color-phosphor)] bg-transparent active:bg-[rgba(51,255,51,0.1)] transition-all font-bold uppercase text-xs md:text-sm"
                         >
                             {option.text}
                         </button>

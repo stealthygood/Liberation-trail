@@ -48,23 +48,23 @@ const ChoiceMenu = ({ options, onSelect, title, disabled = false }) => {
                 {options.map((option, index) => (
                     <div
                         key={option.id}
-                        className={`p-6 border-2 transition-all active:scale-[0.98] ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${index === selectedIndex
+                        className={`p-4 md:p-6 border-2 transition-all active:scale-[0.98] ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${index === selectedIndex
                             ? 'border-[var(--color-phosphor)] bg-[rgba(51,255,51,0.15)] shadow-[0_0_15px_rgba(51,255,51,0.2)]'
                             : 'border-[rgba(51,255,51,0.2)] hover:border-[var(--color-phosphor-dim)]'
                             }`}
                         onClick={() => !disabled && onSelect(option.id)}
                         onMouseEnter={() => !disabled && setSelectedIndex(index)}
                     >
-                        <div className="flex justify-between items-center">
-                            <span className="text-xl font-bold tracking-wide uppercase">
+                        <div className="flex justify-between items-center gap-2">
+                            <span className="text-base md:text-xl font-bold tracking-wide uppercase">
                                 {option.name || option.label}
                             </span>
                             {index === selectedIndex && (
-                                <span className="animate-pulse text-[var(--color-phosphor)]">▶</span>
+                                <span className="animate-pulse text-[var(--color-phosphor)] flex-shrink-0">▶</span>
                             )}
                         </div>
                         {(option.description || option.details) && (
-                            <p className="mt-3 text-sm opacity-70 line-clamp-2">
+                            <p className="mt-2 md:mt-3 text-xs md:text-sm opacity-70">
                                 {option.description || option.details}
                             </p>
                         )}
@@ -72,7 +72,7 @@ const ChoiceMenu = ({ options, onSelect, title, disabled = false }) => {
                 ))}
             </div>
             <div className="mt-8 text-center text-xs opacity-40 uppercase tracking-widest">
-                [ Tap to Liberrate ]
+                [ Tap to Liberate ]
             </div>
         </div>
     );

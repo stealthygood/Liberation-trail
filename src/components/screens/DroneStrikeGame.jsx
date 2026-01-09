@@ -165,13 +165,21 @@ const DroneStrikeGame = () => {
                 <div className="mt-6 flex flex-col items-center gap-4 w-full max-w-sm px-4">
                     <button
                         onClick={handleStrike}
-                        className="bg-red-900/40 border-red-500 hover:bg-red-500 text-white font-bold"
+                        onTouchEnd={(e) => {
+                            e.preventDefault();
+                            handleStrike();
+                        }}
+                        className="bg-red-900/40 border-red-500 hover:bg-red-500 text-white font-bold text-lg md:text-xl py-4"
                     >
                         [ ENGAGE TARGET ]
                     </button>
                     <button
                         onClick={handleAbort}
-                        className="border-[var(--color-phosphor-dim)] hover:border-[var(--color-phosphor)] opacity-60"
+                        onTouchEnd={(e) => {
+                            e.preventDefault();
+                            handleAbort();
+                        }}
+                        className="border-[var(--color-phosphor-dim)] hover:border-[var(--color-phosphor)] opacity-60 text-base md:text-lg py-3"
                     >
                         [ ABORT MISSION ]
                     </button>

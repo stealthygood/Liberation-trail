@@ -31,8 +31,9 @@ const DisclaimerScreen = () => {
 
     return (
         <ScreenLayout center>
-            <pre className="text-[var(--color-phosphor)] text-xs md:text-sm leading-relaxed whitespace-pre font-mono mb-8 scale-75 md:scale-100">
-                {`╔══════════════════════════════════════════════════════════╗
+            <div className="w-full overflow-x-auto px-2">
+                <pre className="text-[var(--color-phosphor)] text-[10px] md:text-sm leading-relaxed whitespace-pre font-mono mb-8 inline-block">
+                    {`╔══════════════════════════════════════════════════════════╗
 ║                   LIBERATION TRAIL                        ║
 ║            "Spreading Democracy™ Since 1953"              ║
 ╠══════════════════════════════════════════════════════════╣
@@ -48,7 +49,8 @@ const DisclaimerScreen = () => {
 ║                                                          ║
 ║  Let's just say cholera is endemic in Washington.       ║
 ╚══════════════════════════════════════════════════════════╝`}
-            </pre>
+                </pre>
+            </div>
 
             <button
                 onClick={proceed}
@@ -56,7 +58,7 @@ const DisclaimerScreen = () => {
                     e.preventDefault();
                     proceed();
                 }}
-                className="text-2xl px-12 py-4 border-[var(--color-phosphor)] hover:bg-[var(--color-phosphor)] hover:text-black animate-pulse mt-8"
+                className="text-xl md:text-2xl px-8 md:px-12 py-4 border-[var(--color-phosphor)] hover:bg-[var(--color-phosphor)] hover:text-black animate-pulse mt-8"
             >
                 [ BEGIN LIBERATION ]
             </button>
