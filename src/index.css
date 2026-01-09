@@ -735,14 +735,17 @@ button:active {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  /* Center content vertically */
+  justify-content: flex-start;
+  /* Start from top to allow scrolling */
   min-height: 100%;
 }
 
 .screen-layout-center>div {
+  margin-top: auto;
+  margin-bottom: auto;
   padding-top: 2rem;
   padding-bottom: 2rem;
+  /* Center vertically when content fits, scroll from top when it doesn't */
 }
 
 .text-center {
