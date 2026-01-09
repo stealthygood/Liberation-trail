@@ -61,8 +61,8 @@ const VictoryScreen = () => {
     }, [dispatch]);
 
     return (
-        <ScreenLayout center>
-            <div className="w-full max-w-2xl px-4 text-center">
+        <div className="flex-1 flex items-center justify-center p-4 overflow-auto">
+            <div className="w-full max-w-2xl text-center">
                 <ASCIIArt art={VICTORY_ART} className="mb-3 text-yellow-400 scale-[0.6] md:scale-100" />
 
                 <h1 className="text-3xl md:text-6xl font-black mb-4 text-yellow-400 leading-tight italic uppercase tracking-tighter bg-black/40 px-3 py-2" style={{ textShadow: '0 0 40px gold' }}>
@@ -115,7 +115,7 @@ const VictoryScreen = () => {
                     </div>
                 </div>
             </div>
-        </ScreenLayout>
+        </div>
     );
 };
 
